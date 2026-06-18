@@ -168,20 +168,36 @@ def export_excel():
             })
             
             # --- SHEET 1: Datos de Sesión ---
-            df.to_excel(writer, sheet_name='Sesión Actual', index=False)
+            df_display = df.copy()
+            df_display.rename(columns={
+                'Attempt ID': 'ID de Ensayo',
+                'Reaction Time (ms)': 'Tiempo de Reaccion (ms)',
+                'Set Size': 'Cantidad de Elementos',
+                'Stimulus Type': 'Tipo de Estimulo',
+                'Target Present': 'Objetivo Presente',
+                'Response Given': 'Respuesta del Evaluado',
+                'Is Correct': 'Respuesta Correcta',
+                'Search Type': 'Tipo de Busqueda',
+                'Subject ID': 'ID de Participante',
+                'Age': 'Edad',
+                'Gender': 'Genero',
+                'Timestamp': 'Fecha/Hora'
+            }, inplace=True)
+            
+            df_display.to_excel(writer, sheet_name='Sesión Actual', index=False)
             worksheet1 = writer.sheets['Sesión Actual']
             
-            for col_num, value in enumerate(df.columns.values):
+            for col_num, value in enumerate(df_display.columns.values):
                 worksheet1.write(0, col_num, value, header_format)
                 
-            for row_idx in range(len(df)):
-                is_correct = df.iloc[row_idx]['Is Correct']
-                fmt = correct_format if str(is_correct).lower() in ['true', '1', 'yes', 'correct'] else incorrect_format
-                for col_idx in range(len(df.columns)):
-                    val = df.iloc[row_idx, col_idx]
+            for row_idx in range(len(df_display)):
+                is_correct = df_display.iloc[row_idx]['Respuesta Correcta']
+                fmt = correct_format if str(is_correct).lower() in ['true', '1', 'yes', 'correct', 'si'] else incorrect_format
+                for col_idx in range(len(df_display.columns)):
+                    val = df_display.iloc[row_idx, col_idx]
                     if isinstance(val, (bool, pd.BooleanDtype)):
                         val = str(val)
-                    if col_idx == 6: # Is Correct column
+                    if col_idx == 6: # Respuesta Correcta column
                         worksheet1.write(row_idx + 1, col_idx, val, fmt)
                     else:
                         worksheet1.write(row_idx + 1, col_idx, val, cell_format)
@@ -254,27 +270,6 @@ def export_excel():
             chart1.set_y_axis({'name': 'Tiempo (ms)'})
             worksheet2.insert_chart('F2', chart1)
             
-            chart2 = workbook.add_chart({'type': 'column'})
-            if not feat_rows.empty:
-                chart2.add_series({
-                    'name':       'Feature',
-                    'categories': '=Resumen Sesión!$B$2:$B$' + str(len(feat_rows) + 1),
-                    'values':     '=Resumen Sesión!$D$2:$D$' + str(len(feat_rows) + 1),
-                    'fill':       {'color': '#10b981'},
-                })
-            if not conj_rows.empty:
-                chart2.add_series({
-                    'name':       'Conjunction',
-                    'categories': '=Resumen Sesión!$B$' + str(len(feat_rows) + 2) + ':$B$' + str(len(summary_df) + 1),
-                    'values':     '=Resumen Sesión!$D$' + str(len(feat_rows) + 2) + ':$D$' + str(len(summary_df) + 1),
-                    'fill':       {'color': '#ef4444'},
-                })
-                
-            chart2.set_title({'name': 'Tasa de Aciertos (%) vs Set Size'})
-            chart2.set_x_axis({'name': 'Set Size (Cantidad de Elementos)'})
-            chart2.set_y_axis({'name': 'Tasa de Aciertos (%)', 'max': 100, 'min': 0})
-            worksheet2.insert_chart('F18', chart2)
-            
             # --- SHEET 3: Historial del Evaluador (Consolidado Histórico) ---
             if not df_history.empty:
                 df_history['Is Correct Num'] = df_history['Is Correct'].apply(lambda x: 1 if str(x).lower() in ['true', '1', 'yes', 'correct'] else 0)
@@ -292,13 +287,53 @@ def export_excel():
                     accuracy = (group['Is Correct Num'].sum() / total_trials) * 100
                     last_eval = group['Timestamp'].max()
                     
+                    # Detailed metrics
+                    feat_correct = correct_group[correct_group['Search Type'] == 'feature']
+                    tr_paralela = feat_correct['Reaction Time (ms)'].mean() if not feat_correct.empty else 0
+                    
+                    conj_correct = correct_group[correct_group['Search Type'] == 'conjunction']
+                    tr_serial = conj_correct['Reaction Time (ms)'].mean() if not conj_correct.empty else 0
+                    
+                    # Slope calculation
+                    sizes = sorted(correct_group['Set Size'].unique())
+                    slope = 0.0
+                    if len(sizes) >= 2:
+                        min_size = sizes[0]
+                        max_size = sizes[-1]
+                        
+                        feat_min = feat_correct[feat_correct['Set Size'] == min_size]['Reaction Time (ms)'].mean()
+                        feat_max = feat_correct[feat_correct['Set Size'] == max_size]['Reaction Time (ms)'].mean()
+                        conj_min = conj_correct[conj_correct['Set Size'] == min_size]['Reaction Time (ms)'].mean()
+                        conj_max = conj_correct[conj_correct['Set Size'] == max_size]['Reaction Time (ms)'].mean()
+                        
+                        feat_slope = (feat_max - feat_min) / (max_size - min_size) if (pd.notnull(feat_min) and pd.notnull(feat_max)) else 0.0
+                        conj_slope = (conj_max - conj_min) / (max_size - min_size) if (pd.notnull(conj_min) and pd.notnull(conj_max)) else 0.0
+                        
+                        import math
+                        slope = max(0.0 if math.isnan(feat_slope) else feat_slope, 0.0 if math.isnan(conj_slope) else conj_slope)
+                        
+                    errors = total_trials - len(correct_group)
+                    
+                    if slope <= 8:
+                        nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que el numero de distractores no afecto significativamente tu velocidad de procesamiento. Esto representa un procesamiento en paralelo automatico (Pop-Out) y un excelente control atencional involuntario."
+                        diagnostico = "Busqueda Paralela"
+                    else:
+                        nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que tu cerebro necesito realizar una busqueda serial y secuencial para analizar cada estimulo. A mayor numero de distractores, mayor tiempo de respuesta y carga cognitiva."
+                        diagnostico = "Busqueda Serial"
+                    
                     history_rows.append({
-                        'ID de Sujeto': sub_id,
+                        'ID de Participante': sub_id,
                         'Edad': age,
                         'Género': gender,
-                        'Ensayos Completados': total_trials,
+                        'Ensayos Realizados': total_trials,
                         'T.R. Promedio (ms)': round(avg_rt, 2),
                         'Precisión (%)': round(accuracy, 2),
+                        'TR Paralela (ms)': round(float(tr_paralela), 2),
+                        'TR Serial (ms)': round(float(tr_serial), 2),
+                        'Pendiente (ms/elem)': round(float(slope), 2),
+                        'Errores': int(errors),
+                        'Diagnóstico Clínico': diagnostico,
+                        'Nota Clínica': nota_clinica,
                         'Última Evaluación': last_eval
                     })
                     
@@ -313,7 +348,7 @@ def export_excel():
                     for col_idx in range(len(hist_summary_df.columns)):
                         worksheet3.write(row_idx + 1, col_idx, hist_summary_df.iloc[row_idx, col_idx], cell_format)
                         
-                worksheet3.set_column('A:G', 22)
+                worksheet3.set_column('A:M', 22)
                 worksheet3.set_row(0, 26)
             
         output.seek(0)
@@ -322,6 +357,181 @@ def export_excel():
             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             as_attachment=True,
             download_name="reporte_evaluador_busqueda_visual.xlsx"
+        )
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/api/export_history_excel', methods=['GET'])
+def export_history_excel():
+    try:
+        if not os.path.exists(HISTORIC_CSV_PATH):
+            return jsonify({"status": "error", "message": "No hay datos en el historial para exportar"}), 404
+        
+        df_history = pd.read_csv(HISTORIC_CSV_PATH)
+        if df_history.empty:
+            return jsonify({"status": "error", "message": "El historial está vacío"}), 400
+            
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            workbook  = writer.book
+            
+            # --- STYLES ---
+            header_format = workbook.add_format({
+                'bold': True,
+                'text_wrap': True,
+                'valign': 'vcenter',
+                'align': 'center',
+                'fg_color': '#1e3a8a', # Dark Blue
+                'font_color': '#ffffff',
+                'border': 1
+            })
+            
+            cell_format = workbook.add_format({
+                'border': 1,
+                'align': 'center'
+            })
+            
+            correct_format = workbook.add_format({
+                'bg_color': '#d1fae5', # Light Green
+                'font_color': '#065f46',
+                'border': 1,
+                'align': 'center'
+            })
+            
+            incorrect_format = workbook.add_format({
+                'bg_color': '#fee2e2', # Light Red
+                'font_color': '#991b1b',
+                'border': 1,
+                'align': 'center'
+            })
+            
+            # --- SHEET 1: Resumen de Participantes ---
+            df_history['Is Correct Num'] = df_history['Is Correct'].apply(lambda x: 1 if str(x).lower() in ['true', '1', 'yes', 'correct'] else 0)
+            
+            subject_groups = df_history.groupby(['Subject ID', 'Age', 'Gender'])
+            
+            history_rows = []
+            for name, group in subject_groups:
+                sub_id, age, gender = name
+                total_trials = len(group)
+                
+                correct_group = group[(group['Is Correct Num'] == 1) & (group['Reaction Time (ms)'] < 90000) & (group['Response Given'] != 'TIMEOUT')]
+                avg_rt = correct_group['Reaction Time (ms)'].mean() if not correct_group.empty else 0
+                accuracy = (group['Is Correct Num'].sum() / total_trials) * 100
+                last_eval = group['Timestamp'].max()
+                
+                # Detailed metrics
+                feat_correct = correct_group[correct_group['Search Type'] == 'feature']
+                tr_paralela = feat_correct['Reaction Time (ms)'].mean() if not feat_correct.empty else 0
+                
+                conj_correct = correct_group[correct_group['Search Type'] == 'conjunction']
+                tr_serial = conj_correct['Reaction Time (ms)'].mean() if not conj_correct.empty else 0
+                
+                # Slope calculation in python
+                sizes = sorted(correct_group['Set Size'].unique())
+                slope = 0.0
+                if len(sizes) >= 2:
+                    min_size = sizes[0]
+                    max_size = sizes[-1]
+                    
+                    feat_min = feat_correct[feat_correct['Set Size'] == min_size]['Reaction Time (ms)'].mean()
+                    feat_max = feat_correct[feat_correct['Set Size'] == max_size]['Reaction Time (ms)'].mean()
+                    conj_min = conj_correct[conj_correct['Set Size'] == min_size]['Reaction Time (ms)'].mean()
+                    conj_max = conj_correct[conj_correct['Set Size'] == max_size]['Reaction Time (ms)'].mean()
+                    
+                    feat_slope = (feat_max - feat_min) / (max_size - min_size) if (pd.notnull(feat_min) and pd.notnull(feat_max)) else 0.0
+                    conj_slope = (conj_max - conj_min) / (max_size - min_size) if (pd.notnull(conj_min) and pd.notnull(conj_max)) else 0.0
+                    
+                    import math
+                    slope = max(0.0 if math.isnan(feat_slope) else feat_slope, 0.0 if math.isnan(conj_slope) else conj_slope)
+                    
+                errors = total_trials - len(correct_group)
+                
+                if slope <= 8:
+                    nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que el numero de distractores no afecto significativamente tu velocidad de procesamiento. Esto representa un procesamiento en paralelo automatico (Pop-Out) y un excelente control atencional involuntario."
+                    diagnostico = "Busqueda Paralela"
+                else:
+                    nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que tu cerebro necesito realizar una busqueda serial y secuencial para analizar cada estimulo. A mayor numero de distractores, mayor tiempo de respuesta y carga cognitiva."
+                    diagnostico = "Busqueda Serial"
+                
+                history_rows.append({
+                    'ID de Participante': sub_id,
+                    'Edad': age,
+                    'Género': gender,
+                    'Ensayos Realizados': total_trials,
+                    'T.R. Promedio (ms)': round(avg_rt, 2),
+                    'Precisión (%)': round(accuracy, 2),
+                    'TR Paralela (ms)': round(float(tr_paralela), 2),
+                    'TR Serial (ms)': round(float(tr_serial), 2),
+                    'Pendiente (ms/elem)': round(float(slope), 2),
+                    'Errores': int(errors),
+                    'Diagnóstico Clínico': diagnostico,
+                    'Nota Clínica': nota_clinica,
+                    'Última Evaluación': last_eval
+                })
+                
+            hist_summary_df = pd.DataFrame(history_rows)
+            hist_summary_df.to_excel(writer, sheet_name='Resumen de Participantes', index=False)
+            worksheet1 = writer.sheets['Resumen de Participantes']
+            
+            for col_num, value in enumerate(hist_summary_df.columns.values):
+                worksheet1.write(0, col_num, value, header_format)
+                
+            for row_idx in range(len(hist_summary_df)):
+                for col_idx in range(len(hist_summary_df.columns)):
+                    worksheet1.write(row_idx + 1, col_idx, hist_summary_df.iloc[row_idx, col_idx], cell_format)
+                    
+            worksheet1.set_column('A:M', 22)
+            worksheet1.set_row(0, 26)
+            
+            # --- SHEET 2: Detalle de Respuestas Históricas ---
+            df_details = df_history.copy()
+            df_details.rename(columns={
+                'Attempt ID': 'ID de Ensayo',
+                'Reaction Time (ms)': 'Tiempo de Reaccion (ms)',
+                'Set Size': 'Cantidad de Elementos',
+                'Stimulus Type': 'Tipo de Estimulo',
+                'Target Present': 'Objetivo Presente',
+                'Response Given': 'Respuesta del Evaluado',
+                'Is Correct': 'Respuesta Correcta',
+                'Search Type': 'Tipo de Busqueda',
+                'Subject ID': 'ID de Participante',
+                'Age': 'Edad',
+                'Gender': 'Genero',
+                'Timestamp': 'Fecha/Hora'
+            }, inplace=True)
+            
+            if 'Is Correct Num' in df_details.columns:
+                df_details.drop(columns=['Is Correct Num'], inplace=True)
+                
+            df_details.to_excel(writer, sheet_name='Detalle de Respuestas', index=False)
+            worksheet2 = writer.sheets['Detalle de Respuestas']
+            
+            for col_num, value in enumerate(df_details.columns.values):
+                worksheet2.write(0, col_num, value, header_format)
+                
+            for row_idx in range(len(df_details)):
+                is_correct = df_details.iloc[row_idx]['Respuesta Correcta']
+                fmt = correct_format if str(is_correct).lower() in ['true', '1', 'yes', 'correct', 'si'] else incorrect_format
+                for col_idx in range(len(df_details.columns)):
+                    val = df_details.iloc[row_idx, col_idx]
+                    if isinstance(val, (bool, pd.BooleanDtype)):
+                        val = str(val)
+                    if col_idx == 6: # Respuesta Correcta column
+                        worksheet2.write(row_idx + 1, col_idx, val, fmt)
+                    else:
+                        worksheet2.write(row_idx + 1, col_idx, val, cell_format)
+                        
+            worksheet2.set_column('A:L', 20)
+            worksheet2.set_row(0, 26)
+            
+        output.seek(0)
+        return send_file(
+            output,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            as_attachment=True,
+            download_name="historial_completo_busqueda_visual.xlsx"
         )
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -349,6 +559,40 @@ def get_history():
             accuracy = (group['Is Correct Num'].sum() / total_trials) * 100
             last_eval = group['Timestamp'].max()
             
+            # Detailed metrics
+            feat_correct = correct_group[correct_group['Search Type'] == 'feature']
+            tr_paralela = feat_correct['Reaction Time (ms)'].mean() if not feat_correct.empty else 0
+            
+            conj_correct = correct_group[correct_group['Search Type'] == 'conjunction']
+            tr_serial = conj_correct['Reaction Time (ms)'].mean() if not conj_correct.empty else 0
+            
+            # Slope calculation in python
+            sizes = sorted(correct_group['Set Size'].unique())
+            slope = 0.0
+            if len(sizes) >= 2:
+                min_size = sizes[0]
+                max_size = sizes[-1]
+                
+                feat_min = feat_correct[feat_correct['Set Size'] == min_size]['Reaction Time (ms)'].mean()
+                feat_max = feat_correct[feat_correct['Set Size'] == max_size]['Reaction Time (ms)'].mean()
+                conj_min = conj_correct[conj_correct['Set Size'] == min_size]['Reaction Time (ms)'].mean()
+                conj_max = conj_correct[conj_correct['Set Size'] == max_size]['Reaction Time (ms)'].mean()
+                
+                feat_slope = (feat_max - feat_min) / (max_size - min_size) if (pd.notnull(feat_min) and pd.notnull(feat_max)) else 0.0
+                conj_slope = (conj_max - conj_min) / (max_size - min_size) if (pd.notnull(conj_min) and pd.notnull(conj_max)) else 0.0
+                
+                import math
+                slope = max(0.0 if math.isnan(feat_slope) else feat_slope, 0.0 if math.isnan(conj_slope) else conj_slope)
+                
+            errors = total_trials - len(correct_group)
+            
+            if slope <= 8:
+                nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que el numero de distractores no afecto significativamente tu velocidad de procesamiento. Esto representa un procesamiento en paralelo automatico (Pop-Out) y un excelente control atencional involuntario."
+                diagnostico = "Busqueda Paralela"
+            else:
+                nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que tu cerebro necesito realizar una busqueda serial y secuencial para analizar cada estimulo. A mayor numero de distractores, mayor tiempo de respuesta y carga cognitiva."
+                diagnostico = "Busqueda Serial"
+                
             history_rows.append({
                 'subject_id': str(sub_id),
                 'age': int(age) if pd.notnull(age) else 0,
@@ -356,7 +600,13 @@ def get_history():
                 'total_trials': int(total_trials),
                 'avg_rt': round(float(avg_rt), 2),
                 'accuracy': round(float(accuracy), 2),
-                'last_eval': str(last_eval)
+                'last_eval': str(last_eval),
+                'tr_paralela': round(float(tr_paralela), 2),
+                'tr_serial': round(float(tr_serial), 2),
+                'pendiente': round(float(slope), 2),
+                'errores': int(errors),
+                'diagnostico': diagnostico,
+                'nota_clinica': nota_clinica
             })
             
         history_rows.sort(key=lambda x: x['last_eval'], reverse=True)

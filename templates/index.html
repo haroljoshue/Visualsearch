@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>PsicoLab UTN: Eficiencia de Búsqueda Visual</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}" />
@@ -547,7 +547,7 @@
           margin-top: 0 !important;
         }
         select, input {
-          font-size: 0.8rem !important;
+          font-size: 16px !important;
           padding: 10px !important;
         }
         .top-bar {
@@ -661,8 +661,7 @@
     </style>
   </head>
   <body>
-    <div class="app-container">
-      <!-- Top Bar Header -->
+    <div class="app-container">      <!-- Top Bar Header -->
       <header class="top-bar">
         <div class="header-title">
           <div class="header-badge">UTN</div>
@@ -671,11 +670,19 @@
             <p class="subtitle">Evaluación de Búsqueda Visual</p>
           </div>
         </div>
-        <div
-          style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted)"
-          id="attempt-indicator"
-        >
-          Ensayos: 0 / 30
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <!-- Top bar buttons, hidden during active testing screens -->
+          <div id="header-actions" style="display: flex; gap: 8px; align-items: center;">
+            <button class="btn btn-secondary" onclick="checkAccessHistory()" style="padding: 8px 14px; font-size: 0.78rem; border: 1.5px solid var(--border-color); background: transparent; margin: 0; min-height: unset; height: auto;">
+              <i class="bi bi-clock-history"></i> Ver Historial
+            </button>
+          </div>
+          <div
+            style="display: none;"
+            id="attempt-indicator"
+          >
+            Ensayos: 0 / 30
+          </div>
         </div>
       </header>
 
@@ -708,110 +715,52 @@
                 color: var(--primary);
               "
             >
-              Evaluación de Atención y Búsqueda Visual
+              Evaluación de Búsqueda Visual
             </h2>
             <p class="subtitle" style="margin-bottom: 20px; font-weight: 600">
               Laboratorio de Psicofisiología Cognitiva
             </p>
 
+            <!-- Short, Clean Presentation Text -->
             <div
               style="
                 width: 100%;
                 text-align: left;
-                background: rgba(241, 245, 249, 0.6);
-                padding: 18px;
+                background: linear-gradient(135deg, var(--primary-light) 0%, rgba(255,255,255,0.9) 100%);
+                padding: 20px;
                 border-radius: 16px;
-                border: 1px solid var(--border-color);
-                margin-bottom: 20px;
+                border: 1.5px solid rgba(30, 64, 175, 0.12);
+                margin-bottom: 24px;
+                box-shadow: 0 4px 15px rgba(30, 64, 175, 0.02);
               "
             >
-              <h4
-                style="
-                  font-size: 0.85rem;
-                  font-weight: 700;
-                  color: var(--text-main);
-                  margin-bottom: 8px;
-                  display: flex;
-                  align-items: center;
-                  gap: 6px;
-                "
-              >
-                <i
-                  class="bi bi-info-circle-fill"
-                  style="color: var(--primary)"
-                ></i>
-                ¿Cómo funciona el test?
-              </h4>
-              <ul
-                style="
-                  font-size: 0.78rem;
-                  color: var(--text-muted);
-                  padding-left: 20px;
-                  line-height: 1.6;
-                  margin-bottom: 16px;
-                "
-              >
-                <li>
-                  <strong>Fase 1: Cruz de Fijación.</strong> Verás un signo
-                  <code>+</code> con un intervalo de 1.5 segundos para enfocar la mirada.
-                </li>
-                <li>
-                  <strong>Fase 2: Estímulos Visuales.</strong> Aparecerán los
-                  elementos seleccionados (tienes un límite de 5 segundos para
-                  responder).
-                </li>
-                <li>
-                  <strong>Fase 3: Respuesta Rápida.</strong> Presiona la tecla
-                  <kbd
-                    style="
-                      background: #fff;
-                      border: 1px solid #ccc;
-                      padding: 1px 6px;
-                      border-radius: 4px;
-                    "
-                    >S</kbd
-                  > (Presente) o
-                  <kbd
-                    style="
-                      background: #fff;
-                      border: 1px solid #ccc;
-                      padding: 1px 6px;
-                      border-radius: 4px;
-                    "
-                    >N</kbd
-                  > (Ausente) lo más rápido posible.
-                </li>
-              </ul>
-
-              <h4
-                style="
-                  font-size: 0.85rem;
-                  font-weight: 700;
-                  color: var(--text-main);
-                  margin-bottom: 8px;
-                  display: flex;
-                  align-items: center;
-                  gap: 6px;
-                "
-              >
-                <i
-                  class="bi bi-bar-chart-line-fill"
-                  style="color: var(--primary)"
-                ></i>
-                ¿Qué estamos evaluando?
-              </h4>
-              <p
-                style="
-                  font-size: 0.78rem;
-                  color: var(--text-muted);
-                  line-height: 1.5;
-                "
-              >
-                Mediremos tu **Tiempo de Reacción (TR)** ante diferentes
-                densidades de distractores (10, 20 o 30 elementos) y el estímulo
-                seleccionado para determinar tu eficiencia atencional.
+              <h3 style="font-size: 0.9rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; text-align: center; letter-spacing: -0.01em;">
+                <i class="bi bi-brain-fill"></i> ¿En qué consiste esta evaluación?
+              </h3>
+              <p style="font-size: 0.78rem; color: var(--text-main); line-height: 1.5; margin-bottom: 12px;">
+                Esta es una prueba psicofisiológica diseñada para medir tu <strong>velocidad de procesamiento mental</strong> y tu <strong>capacidad de discriminación visual</strong>. Consiste en localizar objetivos específicos rodeados de distractores perceptivos.
               </p>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 12px;">
+                <div>
+                  <h4 style="font-size: 0.74rem; font-weight: 800; color: var(--primary); margin-bottom: 4px;">
+                    <i class="bi bi-check-circle-fill"></i> ¿Qué evalúa?
+                  </h4>
+                  <p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4;">
+                    Tu atención selectiva, enfoque y la agilidad de tu cerebro para filtrar información visual relevante.
+                  </p>
+                </div>
+                <div>
+                  <h4 style="font-size: 0.74rem; font-weight: 800; color: var(--primary); margin-bottom: 4px;">
+                    <i class="bi bi-shield-fill-check"></i> ¿Para qué sirve?
+                  </h4>
+                  <p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4;">
+                    Para identificar tu perfil de eficiencia cognitiva y conocer cómo gestionas la carga visual bajo presión.
+                  </p>
+                </div>
+              </div>
             </div>
+
             <!-- Formulario del Participante -->
             <form onsubmit="event.preventDefault(); startTest();" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
               <div class="participant-form-grid">
@@ -819,19 +768,19 @@
                   <label for="subject-id" style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">
                     <i class="bi bi-person-fill" style="color: var(--primary)"></i> ID / Código del Participante:
                   </label>
-                  <input id="subject-id" type="text" placeholder="Ej. SUJETO-001" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-color); font-family: inherit; font-size: 0.85rem; font-weight: 600;" required>
+                  <input id="subject-id" type="text" placeholder="Ej. SUJETO-001" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-color); font-family: inherit; font-size: 16px; font-weight: 600;" required>
                 </div>
                 <div>
                   <label for="subject-age" style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">
                     <i class="bi bi-calendar-event" style="color: var(--primary)"></i> Edad:
                   </label>
-                  <input id="subject-age" type="number" min="5" max="100" placeholder="Ej. 25" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-color); font-family: inherit; font-size: 0.85rem; font-weight: 600;" required>
+                  <input id="subject-age" type="number" min="5" max="100" placeholder="Ej. 25" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-color); font-family: inherit; font-size: 16px; font-weight: 600;" required>
                 </div>
                 <div>
                   <label for="subject-gender" style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">
                     <i class="bi bi-gender-ambiguous" style="color: var(--primary)"></i> Sexo biológico:
                   </label>
-                  <select id="subject-gender" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-color); font-family: inherit; font-size: 0.85rem; font-weight: 600; background: white;">
+                  <select id="subject-gender" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-color); font-family: inherit; font-size: 16px; font-weight: 600; background: white;">
                     <option value="Masculino">Masculino</option>
                     <option value="Femenino">Femenino</option>
                     <option value="Otro">Otro</option>
@@ -892,18 +841,17 @@
                 </select>
               </div>
 
-              <button type="submit" class="btn btn-primary btn-lg">
+              <button type="submit" class="btn btn-primary btn-lg" style="margin-bottom: 0;">
                 Comenzar Prueba
               </button>
             </form>
-            <button class="btn btn-secondary" onclick="checkAccessHistory()" style="margin-top: 12px; border: 1.5px solid var(--border-color); background: transparent;">
-              <i class="bi bi-clock-history"></i> Ver Historial de Evaluaciones
-            </button>
-            <div id="qr-container" style="margin-top: 24px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 16px; width: 100%; display: none;">
-              <p style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">
+
+            <!-- QR code at the bottom of the card -->
+            <div id="qr-container" style="margin-top: 20px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 16px; width: 100%; display: none;">
+              <p style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">
                 <i class="bi bi-qr-code"></i> Escanea para realizar la prueba en el celular:
               </p>
-              <img id="qr-code-img" src="" alt="Código QR" style="border: 2px solid var(--border-color); border-radius: 8px; padding: 4px; background: white; max-width: 120px;">
+              <img id="qr-code-img" src="" alt="Código QR" style="border: 2px solid var(--border-color); border-radius: 8px; padding: 4px; background: white; max-width: 110px; width: 110px; height: 110px;">
             </div>
           </div>
         </div>
@@ -946,7 +894,7 @@
 
         <!-- Screen 3: Stimuli Canvas -->
         <div id="screen-stimuli" class="screen">
-          <div class="progress-header" id="progress-hud">Ensayo 1 de 30</div>
+          <div class="progress-header" id="progress-hud" style="display: none;">Ensayo 1 de 30</div>
           <div class="canvas-area" style="position: relative;">
             <div id="stimulus-canvas" style="width: 100%; height: 100%; position: relative;"></div>
             <div id="feedback-overlay" class="feedback-overlay"></div>
@@ -955,10 +903,10 @@
           <!-- Present/Absent action buttons -->
           <div class="actions-row" style="max-width: 500px; justify-content: center; margin-top: 15px;">
              <button id="btn-present" class="btn" style="background-color: #10b981; color: white; padding: 12px 24px; border-radius: 10px; font-weight: 700; flex: 1;" onclick="handleResponseInput('present')">
-                <i class="bi bi-check-circle-fill"></i> Presente [S]
+                <i class="bi bi-check-circle-fill"></i> SI [S]
              </button>
              <button id="btn-absent" class="btn" style="background-color: #ef4444; color: white; padding: 12px 24px; border-radius: 10px; font-weight: 700; flex: 1;" onclick="handleResponseInput('absent')">
-                <i class="bi bi-x-circle-fill"></i> Ausente [N]
+                <i class="bi bi-x-circle-fill"></i> NO [N]
              </button>
           </div>
 
@@ -974,7 +922,7 @@
             "
           >
             <span id="hud-instruction-text"
-              >Presiona <kbd>S</kbd> (Presente) o <kbd>N</kbd> (Ausente)</span
+              >Presiona <kbd>S</kbd> (SI) o <kbd>N</kbd> (NO)</span
             >
             <span
               id="trial-timer-hud"
@@ -1003,6 +951,11 @@
               Resultados de Evaluación
             </h2>
 
+            <!-- Mensaje de despedida y agradecimiento -->
+            <div style="background-color: #f0fdf4; border: 1.5px solid #bbf7d0; color: #166534; padding: 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; text-align: center; margin-bottom: 16px; width: 100%;">
+              Evaluacion finalizada con exito. Muchas gracias por participar en este test.
+            </div>
+
             <div class="results-layout">
               <!-- Top: Diagnosis -->
               <div class="results-diag-card">
@@ -1010,11 +963,53 @@
                   <i class="bi bi-activity" style="color: var(--primary)"></i>
                   Diagnóstico Clínico
                 </h3>
-                <div class="diag-badge" id="search-type-badge">
+                
+                <!-- Resultados en cuadros (Cards Grid) -->
+                <div class="results-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px;">
+                  
+                  <div class="result-box" style="background: #f8fafc; border-radius: 12px; padding: 14px 10px; text-align: center; border: 1.5px solid #e2e8f0;">
+                    <div id="res-tr-feature" style="font-size: 1.4rem; font-weight: 800; color: #10b981; margin-bottom: 2px;">0ms</div>
+                    <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.02em;">TR Paralela</div>
+                  </div>
+                  
+                  <div class="result-box" style="background: #f8fafc; border-radius: 12px; padding: 14px 10px; text-align: center; border: 1.5px solid #e2e8f0;">
+                    <div id="res-tr-conjunction" style="font-size: 1.4rem; font-weight: 800; color: #ef4444; margin-bottom: 2px;">0ms</div>
+                    <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.02em;">TR Serial</div>
+                  </div>
+                  
+                  <div class="result-box" style="background: #f8fafc; border-radius: 12px; padding: 14px 10px; text-align: center; border: 1.5px solid #e2e8f0;">
+                    <div id="res-slope" style="font-size: 1.4rem; font-weight: 800; color: #f97316; margin-bottom: 2px;">+0 ms</div>
+                    <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.02em;">Pendiente</div>
+                  </div>
+                  
+                  <div class="result-box" style="background: #f8fafc; border-radius: 12px; padding: 14px 10px; text-align: center; border: 1.5px solid #e2e8f0;">
+                    <div id="res-accuracy" style="font-size: 1.4rem; font-weight: 800; color: #2563eb; margin-bottom: 2px;">0%</div>
+                    <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.02em;">Precisión</div>
+                  </div>
+                  
+                  <div class="result-box" style="background: #f8fafc; border-radius: 12px; padding: 14px 10px; text-align: center; border: 1.5px solid #e2e8f0;">
+                    <div id="res-errors" style="font-size: 1.4rem; font-weight: 800; color: #dc2626; margin-bottom: 2px;">0</div>
+                    <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.02em;">Errores</div>
+                  </div>
+                  
+                  <div class="result-box" style="background: #f8fafc; border-radius: 12px; padding: 14px 10px; text-align: center; border: 1.5px solid #e2e8f0;">
+                    <div id="res-trials" style="font-size: 1.4rem; font-weight: 800; color: #1e293b; margin-bottom: 2px;">0</div>
+                    <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.02em;">Ensayos</div>
+                  </div>
+                  
+                </div>
+
+                <!-- Cuadro explicativo (Alert Box) -->
+                <div id="res-alert-box" style="background: #eff6ff; border: 1.5px solid #bfdbfe; color: #1e3a8a; padding: 14px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; line-height: 1.5; margin-bottom: 20px; text-align: left; display: flex; align-items: flex-start; gap: 8px;">
+                  <span style="font-size: 1.1rem; line-height: 1;">💡</span>
+                  <div id="res-alert-text">Cargando diagnóstico...</div>
+                </div>
+
+                <div class="diag-badge" id="search-type-badge" style="display: none;">
                   Procesamiento Paralelo
                 </div>
-                <div class="diag-score" id="average-rt-label">0 ms</div>
-                <p class="diag-text" id="diagnostic-summary">
+                <div class="diag-score" id="average-rt-label" style="display: none;">0 ms</div>
+                <p class="diag-text" id="diagnostic-summary" style="display: none;">
                   Cargando diagnóstico de eficiencia visual...
                 </p>
 
@@ -1025,6 +1020,10 @@
                 <a href="/api/export_excel" class="btn" style="background-color: #15803d; color: white; margin-top: 12px; width: 100%; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
                   <i class="bi bi-file-earmark-excel-fill"></i> Descargar Excel Reporte
                 </a>
+
+                <button class="btn btn-secondary" onclick="checkAccessHistory()" style="margin-top: 12px; border: 1.5px solid var(--border-color); background: transparent; width: 100%;">
+                  <i class="bi bi-clock-history"></i> Ver Historial de Evaluaciones
+                </button>
               </div>
 
               <!-- Bottom: Table -->
@@ -1081,7 +1080,7 @@
                 <label for="admin-password" style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">
                   Contraseña:
                 </label>
-                <input id="admin-password" type="password" placeholder="••••••" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-color); font-family: inherit; font-size: 0.9rem; font-weight: 600; text-align: center; letter-spacing: 4px;" required>
+                <input id="admin-password" type="password" placeholder="••••••" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-color); font-family: inherit; font-size: 16px; font-weight: 600; text-align: center; letter-spacing: 4px;" required>
                 <div id="admin-login-error" style="color: var(--danger); font-size: 0.78rem; margin-top: 8px; font-weight: 700; display: none; text-align: center;">
                   <i class="bi bi-exclamation-triangle-fill"></i> Contraseña incorrecta. Acceso denegado.
                 </div>
@@ -1158,6 +1157,11 @@
                     <th>Ensayos</th>
                     <th>T.R. Promedio</th>
                     <th>Precisión</th>
+                    <th>TR Paralela</th>
+                    <th>TR Serial</th>
+                    <th>Pendiente</th>
+                    <th>Errores</th>
+                    <th>Diagnóstico Clínico</th>
                     <th>Fecha/Hora</th>
                     <th style="text-align: center;">Acción</th>
                   </tr>
@@ -1183,6 +1187,9 @@
               <button class="btn btn-secondary" onclick="showScreen('start')" style="flex: 1; margin-top: 0; border: 1.5px solid var(--border-color); background: transparent;">
                 <i class="bi bi-arrow-left"></i> Volver al Inicio
               </button>
+              <a href="/api/export_history_excel" class="btn btn-primary" style="flex: 1; margin-top: 0; background-color: #15803d; border-color: #15803d; color: white; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="bi bi-file-earmark-excel-fill"></i> Descargar Excel Historial
+              </a>
               <button class="btn btn-primary" onclick="clearHistory()" style="flex: 1; background: var(--danger); box-shadow: none;">
                 <i class="bi bi-trash3-fill"></i> Borrar Historial
               </button>
@@ -1245,6 +1252,16 @@
         });
         screens[screenKey].classList.add("active");
         
+        // Hide top-bar actions during active test phases
+        const headerActions = document.getElementById("header-actions");
+        if (headerActions) {
+          if (screenKey === "fixation" || screenKey === "stimuli") {
+            headerActions.style.visibility = "hidden";
+          } else {
+            headerActions.style.visibility = "visible";
+          }
+        }
+
         // Dynamically lock scroll only during active testing phases (fixation and stimuli)
         if (screenKey === "fixation" || screenKey === "stimuli") {
           document.body.classList.add("scroll-locked");
@@ -1301,8 +1318,8 @@
           <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá letras <strong>"O"</strong> en azul, y a veces letras <strong>"Q"</strong> de color rojo.</p>
           <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si encuentras la <strong>"Q" azul</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>Presente [S]</strong>).</li>
-            <li>Si NO está la "Q" azul, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>Ausente [N]</strong>).</li>
+            <li>Si encuentras la <strong>"Q" azul</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
+            <li>Si NO está la "Q" azul, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `,
         colors: `
@@ -1312,8 +1329,8 @@
           <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá círculos rojos 🔴 y a veces cuadrados azules 🟦 en pantalla.</p>
           <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si encuentras el <strong>Círculo Azul</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>Presente [S]</strong>).</li>
-            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>Ausente [N]</strong>).</li>
+            <li>Si encuentras el <strong>Círculo Azul</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
+            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `,
         shapes: `
@@ -1323,8 +1340,8 @@
           <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá círculos verdes 🟢 y a veces cuadrados naranjas 🟧 en pantalla.</p>
           <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si encuentras el <strong>Cuadrado Verde</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>Presente [S]</strong>).</li>
-            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>Ausente [N]</strong>).</li>
+            <li>Si encuentras el <strong>Cuadrado Verde</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
+            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `,
         animals: `
@@ -1334,8 +1351,8 @@
           <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá perros 🐶 y a veces otros felinos como tigres 🐯.</p>
           <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si encuentras el <strong>Gato 🐱</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>Presente [S]</strong>).</li>
-            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>Ausente [N]</strong>).</li>
+            <li>Si encuentras el <strong>Gato 🐱</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
+            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `,
         fruits: `
@@ -1345,8 +1362,8 @@
           <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá <strong>Manzanas Verdes</strong> 🍏 y <strong>Cerezas</strong> 🍒 en pantalla.</p>
           <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si encuentras la <strong>Manzana Roja 🍎</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>Presente [S]</strong>).</li>
-            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>Ausente [N]</strong>).</li>
+            <li>Si encuentras la <strong>Manzana Roja 🍎</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
+            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `,
         social_intruder: `
@@ -1362,8 +1379,8 @@
           <p style="margin-bottom:12px; font-size: 0.95rem;">Los iconos aparecerán deslizándose desde abajo y <strong>se ocultarán por completo tras 1.8 segundos</strong>. Debes responder rápidamente (¡incluso si ya desaparecieron!).</p>
           <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si identificas al <strong>globo intruso (degradado, número discontinuo)</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>Presente [S]</strong>).</li>
-            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>Ausente [N]</strong>).</li>
+            <li>Si identificas al <strong>globo intruso (degradado, número discontinuo)</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
+            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `
       };
@@ -1834,14 +1851,35 @@
 
         const accuracyPct = trialsData.length > 0 ? Math.round((ensayosValidos.length / trialsData.length) * 100) : 0;
 
+        // Calcular TRs por tipo de busqueda
+        const featureTrials = ensayosValidos.filter(t => t.search_type === "feature");
+        const avgFeatureRt = featureTrials.length > 0 ? Math.round(featureTrials.reduce((sum, t) => sum + t.rt, 0) / featureTrials.length) : 0;
+        
+        const conjunctionTrials = ensayosValidos.filter(t => t.search_type === "conjunction");
+        const avgConjunctionRt = conjunctionTrials.length > 0 ? Math.round(conjunctionTrials.reduce((sum, t) => sum + t.rt, 0) / conjunctionTrials.length) : 0;
+
+        const numErrors = trialsData.length - ensayosValidos.length;
+        const totalTrials = trialsData.length;
+
+        // Inyectar datos en los cuadros nuevos
+        document.getElementById("res-tr-feature").textContent = avgFeatureRt > 0 ? `${avgFeatureRt}ms` : "---";
+        document.getElementById("res-tr-conjunction").textContent = avgConjunctionRt > 0 ? `${avgConjunctionRt}ms` : "---";
+        document.getElementById("res-slope").textContent = `+${slope.toFixed(1)}ms`;
+        document.getElementById("res-accuracy").textContent = `${accuracyPct}%`;
+        document.getElementById("res-errors").textContent = numErrors;
+        document.getElementById("res-trials").textContent = totalTrials;
+
         let diagnosisText = "";
         let efficiencyText = "";
+        let alertText = "";
 
         if (slope <= 8) {
           searchTypeBadge.textContent = "Búsqueda Paralela (Pop-Out)";
           searchTypeBadge.style.backgroundColor = "var(--primary-light)";
           searchTypeBadge.style.color = "var(--primary)";
           efficiencyText = "Excelente (Procesamiento Automático)";
+
+          alertText = `El efecto de pendiente (<code>${slope.toFixed(1)} ms/elemento</code>) indica que el numero de distractores no afecto significativamente tu velocidad de procesamiento. Esto representa un procesamiento en paralelo automatico (Pop-Out) y un excelente control atencional involuntario.`;
 
           diagnosisText = `
                     <p style="margin-bottom: 10px; text-align: left; font-size: 0.8rem; line-height: 1.5;">• <strong>Precisión Global:</strong> <code>${accuracyPct}%</code> (${ensayosValidos.length} de ${trialsData.length} aciertos).</p>
@@ -1855,6 +1893,8 @@
           searchTypeBadge.style.color = "var(--danger)";
           efficiencyText = slope <= 20 ? "Promedio (Búsqueda Guiada)" : "Baja (Exploración Exhaustiva)";
 
+          alertText = `El efecto de pendiente (<code>${slope.toFixed(1)} ms/elemento</code>) indica que tu cerebro necesito realizar una busqueda serial y secuencial para analizar cada estimulo. A mayor numero de distractores, mayor tiempo de respuesta y carga cognitiva.`;
+
           diagnosisText = `
                     <p style="margin-bottom: 10px; text-align: left; font-size: 0.8rem; line-height: 1.5;">• <strong>Precisión Global:</strong> <code>${accuracyPct}%</code> (${ensayosValidos.length} de ${trialsData.length} aciertos).</p>
                     <p style="margin-bottom: 10px; text-align: left; font-size: 0.8rem; line-height: 1.5;">• <strong>Pendiente Máxima de búsqueda:</strong> <code>${slope.toFixed(1)} ms/elemento</code>. A mayor cantidad de elementos en pantalla, tu tiempo de reacción aumentó de forma lineal.</p>
@@ -1863,6 +1903,7 @@
                 `;
         }
         diagnosticSummary.innerHTML = diagnosisText;
+        document.getElementById("res-alert-text").innerHTML = alertText;
 
         showScreen("results");
       }
@@ -1943,14 +1984,14 @@
       function loadHistory() {
         showScreen("history");
         const histTableBody = document.getElementById("history-table-body");
-        histTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Cargando historial...</td></tr>';
+        histTableBody.innerHTML = '<tr><td colspan="13" style="text-align:center;">Cargando historial...</td></tr>';
         
         fetch("/api/history")
           .then((res) => res.json())
           .then((data) => {
             histTableBody.innerHTML = "";
             if (!Array.isArray(data)) {
-              histTableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color: var(--danger); font-weight:700;">Error del Servidor: ${data.message || 'Respuesta inválida'}</td></tr>`;
+              histTableBody.innerHTML = `<tr><td colspan="13" style="text-align:center; color: var(--danger); font-weight:700;">Error del Servidor: ${data.message || 'Respuesta inválida'}</td></tr>`;
               return;
             }
             historyData = data;
@@ -2018,92 +2059,100 @@
             document.getElementById("kpi-avg-age").textContent = avgAge !== "N/D" ? `${avgAge} años` : "N/D";
 
             // --- CHART 1: PERFORMANCE ---
-            if (chartPerformanceInstance) chartPerformanceInstance.destroy();
-            const ctxPerf = document.getElementById("chart-performance").getContext("2d");
-            chartPerformanceInstance = new Chart(ctxPerf, {
-              type: 'bar',
-              data: {
-                labels: labels.slice(0, 10), // Limit to top 10 for readability
-                datasets: [
-                  {
-                    label: 'T.R. Promedio (ms)',
-                    data: rts.slice(0, 10),
-                    backgroundColor: 'rgba(30, 64, 175, 0.75)', // Psychology Royal Blue
-                    borderColor: 'rgb(30, 64, 175)',
-                    borderWidth: 1.5,
-                    yAxisID: 'y-rt'
-                  },
-                  {
-                    label: 'Precisión (%)',
-                    data: accuracies.slice(0, 10),
-                    type: 'line',
-                    borderColor: 'rgb(16, 185, 129)', // Success Green
-                    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                    borderWidth: 2.5,
-                    tension: 0.35,
-                    fill: false,
-                    yAxisID: 'y-acc'
-                  }
-                ]
-              },
-              options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: { labels: { font: { family: 'Plus Jakarta Sans', size: 10, weight: '700' } } }
+            if (typeof Chart !== 'undefined') {
+              if (chartPerformanceInstance) chartPerformanceInstance.destroy();
+              const ctxPerf = document.getElementById("chart-performance").getContext("2d");
+              chartPerformanceInstance = new Chart(ctxPerf, {
+                type: 'bar',
+                data: {
+                  labels: labels.slice(0, 10), // Limit to top 10 for readability
+                  datasets: [
+                    {
+                      label: 'T.R. Promedio (ms)',
+                      data: rts.slice(0, 10),
+                      backgroundColor: 'rgba(30, 64, 175, 0.75)', // Psychology Royal Blue
+                      borderColor: 'rgb(30, 64, 175)',
+                      borderWidth: 1.5,
+                      yAxisID: 'y-rt'
+                    },
+                    {
+                      label: 'Precisión (%)',
+                      data: accuracies.slice(0, 10),
+                      type: 'line',
+                      borderColor: 'rgb(16, 185, 129)', // Success Green
+                      backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                      borderWidth: 2.5,
+                      tension: 0.35,
+                      fill: false,
+                      yAxisID: 'y-acc'
+                    }
+                  ]
                 },
-                scales: {
-                  'y-rt': {
-                    type: 'linear',
-                    position: 'left',
-                    title: { display: true, text: 'Tiempo (ms)', font: { size: 10, weight: '700' } },
-                    grid: { drawOnChartArea: true }
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: { labels: { font: { family: 'Plus Jakarta Sans', size: 10, weight: '700' } } }
                   },
-                  'y-acc': {
-                    type: 'linear',
-                    position: 'right',
-                    title: { display: true, text: 'Precisión (%)', font: { size: 10, weight: '700' } },
-                    min: 0,
-                    max: 100,
-                    grid: { drawOnChartArea: false }
+                  scales: {
+                    'y-rt': {
+                      type: 'linear',
+                      position: 'left',
+                      title: { display: true, text: 'Tiempo (ms)', font: { size: 10, weight: '700' } },
+                      grid: { drawOnChartArea: true }
+                    },
+                    'y-acc': {
+                      type: 'linear',
+                      position: 'right',
+                      title: { display: true, text: 'Precisión (%)', font: { size: 10, weight: '700' } },
+                      min: 0,
+                      max: 100,
+                      grid: { drawOnChartArea: false }
+                    }
                   }
                 }
-              }
-            });
+              });
+            } else {
+              console.warn("Chart.js is not defined. Skipping Chart 1 rendering.");
+            }
 
             // --- CHART 2: DEMOGRAPHICS ---
-            if (chartDemographicsInstance) chartDemographicsInstance.destroy();
-            const ctxDemo = document.getElementById("chart-demographics").getContext("2d");
-            chartDemographicsInstance = new Chart(ctxDemo, {
-              type: 'doughnut',
-              data: {
-                labels: ['Masculino', 'Femenino', 'Otro'],
-                datasets: [{
-                  data: [males, females, others],
-                  backgroundColor: [
-                    'rgba(37, 99, 235, 0.75)', // Blue
-                    'rgba(236, 72, 153, 0.75)', // Pink
-                    'rgba(100, 116, 139, 0.75)'  // Slate/Other
-                  ],
-                  borderWidth: 2,
-                  borderColor: '#ffffff'
-                }]
-              },
-              options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    position: 'bottom',
-                    labels: { font: { family: 'Plus Jakarta Sans', size: 10, weight: '700' } }
+            if (typeof Chart !== 'undefined') {
+              if (chartDemographicsInstance) chartDemographicsInstance.destroy();
+              const ctxDemo = document.getElementById("chart-demographics").getContext("2d");
+              chartDemographicsInstance = new Chart(ctxDemo, {
+                type: 'doughnut',
+                data: {
+                  labels: ['Masculino', 'Femenino', 'Otro'],
+                  datasets: [{
+                    data: [males, females, others],
+                    backgroundColor: [
+                      'rgba(37, 99, 235, 0.75)', // Blue
+                      'rgba(236, 72, 153, 0.75)', // Pink
+                      'rgba(100, 116, 139, 0.75)'  // Slate/Other
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      position: 'bottom',
+                      labels: { font: { family: 'Plus Jakarta Sans', size: 10, weight: '700' } }
+                    }
                   }
                 }
-              }
-            });
+              });
+            } else {
+              console.warn("Chart.js is not defined. Skipping Chart 2 rendering.");
+            }
           })
           .catch((err) => {
             console.error("Dashboard error:", err);
-            histTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center; color: var(--danger);">Error al cargar el historial.</td></tr>';
+            histTableBody.innerHTML = '<tr><td colspan="13" style="text-align:center; color: var(--danger);">Error al cargar el historial.</td></tr>';
           });
       }
 
@@ -2112,7 +2161,7 @@
         histTableBody.innerHTML = "";
 
         if (historyData.length === 0) {
-          histTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center; color: var(--text-muted);">No hay evaluaciones registradas en el historial.</td></tr>';
+          histTableBody.innerHTML = '<tr><td colspan="13" style="text-align:center; color: var(--text-muted);">No hay evaluaciones registradas en el historial.</td></tr>';
           document.getElementById("history-page-indicator").textContent = "Página 1 de 1";
           document.getElementById("btn-prev-history").disabled = true;
           document.getElementById("btn-next-history").disabled = true;
@@ -2141,6 +2190,15 @@
               <td>${row.total_trials}</td>
               <td><strong>${row.avg_rt} ms</strong></td>
               <td><strong>${row.accuracy}%</strong></td>
+              <td>${row.tr_paralela ? row.tr_paralela + ' ms' : '---'}</td>
+              <td>${row.tr_serial ? row.tr_serial + ' ms' : '---'}</td>
+              <td><strong>+${row.pendiente} ms</strong></td>
+              <td style="color:var(--danger); font-weight:700;">${row.errores}</td>
+              <td>
+                <span class="badge" style="padding:4px 8px; border-radius:8px; font-size:0.7rem; font-weight:700; background-color:${row.pendiente <= 8 ? '#d1fae5' : '#fee2e2'}; color:${row.pendiente <= 8 ? '#065f46' : '#991b1b'};" title="${row.nota_clinica}">
+                  ${row.diagnostico}
+                </span>
+              </td>
               <td style="font-size: 0.75rem; color: var(--text-muted);">${row.last_eval}</td>
               <td style="text-align: center;">
                 <button class="btn" onclick="deleteRecord('${row.subject_id}')" style="padding: 4px 8px; font-size: 0.75rem; color: var(--danger); border: 1.5px solid var(--danger); background: transparent; margin-top: 0; min-height: unset; height: unset;">
@@ -2210,7 +2268,7 @@
         const qrContainer = document.getElementById("qr-container");
         const qrImg = document.getElementById("qr-code-img");
         if (qrContainer && qrImg) {
-          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}`;
+          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(window.location.href)}`;
           qrContainer.style.display = "block";
         }
       }
