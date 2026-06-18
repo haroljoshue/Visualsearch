@@ -42,6 +42,10 @@ init_csv()
 def index():
     return render_template('index.html')
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_file(os.path.join(app.root_path, 'static', 'favicon.png'), mimetype='image/png')
+
 @app.route('/api/save_trial', methods=['POST'])
 def save_trial():
     try:
