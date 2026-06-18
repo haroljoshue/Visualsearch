@@ -1,0 +1,7 @@
+Attempt ID,Reaction Time (ms),Set Size,Stimulus Type,Target Present,Response Given,Is Correct,Search Type,Subject ID,Age,Gender,Timestamp
+1,1348,10,letters,True,P,True,conjunction,Harol,21,Masculino,2026-06-17 19:12:48
+2,23,20,letters,False,A,True,feature,Harol,21,Masculino,2026-06-17 19:12:50
+3,21,20,letters,False,A,True,conjunction,Harol,21,Masculino,2026-06-17 19:12:53
+4,5000,30,letters,True,TIMEOUT,False,feature,Harol,21,Masculino,2026-06-17 19:13:00
+5,5000,10,letters,True,TIMEOUT,False,feature,Harol,21,Masculino,2026-06-17 19:13:07
+6,5000,30,letters,True,TIMEOUT,False,feature,Harol,21,Masculino,2026-06-17 19:13:15
