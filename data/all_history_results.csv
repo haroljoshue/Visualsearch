@@ -1,11 +1,1 @@
 Attempt ID,Reaction Time (ms),Set Size,Stimulus Type,Target Present,Response Given,Is Correct,Search Type,Subject ID,Age,Gender,Timestamp,Session ID
-1,1131,20,letters,True,A,False,feature,Harol,21,Masculino,2026-06-18 00:34:15,SES-1781760851220-9369
-2,437,30,letters,True,P,True,conjunction,Harol,21,Masculino,2026-06-18 00:34:18,SES-1781760851220-9369
-3,782,20,letters,False,A,True,conjunction,Harol,21,Masculino,2026-06-18 00:34:21,SES-1781760851220-9369
-4,311,30,letters,True,P,True,feature,Harol,21,Masculino,2026-06-18 00:34:24,SES-1781760851220-9369
-5,42,20,letters,True,P,True,conjunction,Harol,21,Masculino,2026-06-18 00:34:26,SES-1781760851220-9369
-6,305,30,letters,False,A,True,conjunction,Harol,21,Masculino,2026-06-18 00:34:29,SES-1781760851220-9369
-7,282,10,letters,False,P,False,feature,Harol,21,Masculino,2026-06-18 00:34:32,SES-1781760851220-9369
-8,343,20,letters,True,A,False,conjunction,Harol,21,Masculino,2026-06-18 00:34:34,SES-1781760851220-9369
-9,268,10,letters,False,P,False,conjunction,Harol,21,Masculino,2026-06-18 00:34:37,SES-1781760851220-9369
-10,235,20,letters,False,A,True,conjunction,Harol,21,Masculino,2026-06-18 00:34:39,SES-1781760851220-9369
