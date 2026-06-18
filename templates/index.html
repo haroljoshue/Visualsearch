@@ -448,7 +448,7 @@
         }
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 768px) {
         .canvas-area {
           height: 48vh !important;
           width: 96% !important;
@@ -464,9 +464,14 @@
         .top-bar h1 {
           font-size: 0.95rem !important;
         }
+        .screen-wrapper {
+          padding: 8px !important;
+        }
         .panel-card {
-          padding: 16px !important;
-          max-width: 96% !important;
+          padding: 16px 14px !important;
+          max-width: 100% !important;
+          width: 100% !important;
+          border-radius: 12px !important;
         }
         .btn {
           padding: 10px 16px !important;
@@ -521,7 +526,7 @@
       .table-responsive table td {
         white-space: nowrap;
       }
-      @media (max-width: 600px) {
+      @media (max-width: 768px) {
         .feedback-overlay {
           font-size: 1.4rem !important;
           border-radius: 12px;
@@ -530,6 +535,9 @@
         .participant-form-grid {
           grid-template-columns: 1fr !important;
           gap: 10px !important;
+        }
+        .participant-form-grid > div {
+          grid-column: span 1 !important;
         }
         #results-pagination-controls,
         #history-pagination-controls {
@@ -694,7 +702,7 @@
           class="screen active"
           style="padding: 10px; max-height: 100%; overflow-y: auto"
         >
-          <div class="panel-card" style="max-width: 600px; padding: 28px">
+          <div class="panel-card" style="max-width: 950px; padding: 28px">
             <!-- Protocol Warning Banner -->
             <div id="protocol-warning" style="display: none; width: 100%; text-align: left; background: #fffbeb; border: 1.5px solid #f59e0b; color: #b45309; padding: 14px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; margin-bottom: 20px;">
               <i class="bi bi-exclamation-triangle-fill" style="margin-right: 6px; font-size: 1rem; color: #d97706;"></i>
@@ -786,6 +794,12 @@
                     <option value="Otro">Otro</option>
                   </select>
                 </div>
+                <div style="grid-column: span 2;">
+                  <label for="subject-trials" style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">
+                    <i class="bi bi-play-btn-fill" style="color: var(--primary)"></i> Número de ensayos (Mínimo 10, Máximo 60):
+                  </label>
+                  <input id="subject-trials" type="number" min="10" max="60" value="30" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-color); font-family: inherit; font-size: 16px; font-weight: 600;" required>
+                </div>
               </div>
 
               <!-- Stimulus Menu Selector -->
@@ -858,7 +872,7 @@
 
         <!-- Screen 1.5: Instructions Preview -->
         <div id="screen-instructions" class="screen" style="padding: 10px; max-height: 100%; overflow-y: auto;">
-          <div class="panel-card" style="max-width: 600px; padding: 28px;">
+          <div class="panel-card" style="max-width: 950px; padding: 28px;">
             <div class="icon-hero" style="margin-bottom: 12px; font-size: 2.5rem; color: var(--primary);">
               <i class="bi bi-eye-fill"></i>
             </div>
@@ -1020,10 +1034,6 @@
                 <a href="/api/export_excel" class="btn" style="background-color: #15803d; color: white; margin-top: 12px; width: 100%; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
                   <i class="bi bi-file-earmark-excel-fill"></i> Descargar Excel Reporte
                 </a>
-
-                <button class="btn btn-secondary" onclick="checkAccessHistory()" style="margin-top: 12px; border: 1.5px solid var(--border-color); background: transparent; width: 100%;">
-                  <i class="bi bi-clock-history"></i> Ver Historial de Evaluaciones
-                </button>
               </div>
 
               <!-- Bottom: Table -->
@@ -1218,6 +1228,7 @@
       let participantId = "SUJETO-001";
       let participantAge = "25";
       let participantGender = "Masculino";
+      let currentSessionId = "";
 
       // Timer references
       let responseTimeoutTimer = null;
@@ -1270,8 +1281,9 @@
         }
       }
 
-      // 1. Generar la "matriz de ensayos" aleatoria antes del bloque (30 ensayos en total)
+      // 1. Generar la "matriz de ensayos" aleatoria antes del bloque
       function generateTrialMatrix() {
+        const numTrials = parseInt(document.getElementById("subject-trials").value) || 30;
         const isIntruder = (blockSelectedStimulus === "social_intruder");
         // For Social Intruder, we use setSizes 20, 40, 60. Otherwise, 10, 20, 30.
         const sizes = isIntruder ? [20, 40, 60] : [10, 20, 30];
@@ -1280,8 +1292,9 @@
         const matrix = [];
         let id = 1;
 
-        // Generate 3 copies of the 12 base trials = 36 trials, then slice to 30
-        for (let copy = 0; copy < 3; copy++) {
+        // Generate copies of the 12 base trials dynamically
+        const copies = Math.ceil(numTrials / 12) + 1;
+        for (let copy = 0; copy < copies; copy++) {
           searchTypes.forEach((type) => {
             sizes.forEach((size) => {
               targetPresences.forEach((present) => {
@@ -1303,7 +1316,7 @@
           [matrix[i], matrix[j]] = [matrix[j], matrix[i]];
         }
         
-        const finalMatrix = matrix.slice(0, 30);
+        const finalMatrix = matrix.slice(0, numTrials);
         finalMatrix.forEach((trial, idx) => {
           trial.id = idx + 1;
         });
@@ -1390,6 +1403,7 @@
         participantId = document.getElementById("subject-id").value.trim() || "Anonimo";
         participantAge = document.getElementById("subject-age").value.trim() || "25";
         participantGender = document.getElementById("subject-gender").value;
+        currentSessionId = "SES-" + Date.now() + "-" + Math.floor(Math.random() * 10000);
 
         currentTrialIndex = 0;
         trialsData = [];
@@ -1775,7 +1789,8 @@
           search_type: activeTrial.tipoBusqueda,
           subject_id: participantId,
           age: participantAge,
-          gender: participantGender
+          gender: participantGender,
+          session_id: currentSessionId
         };
 
         trialsData.push(trialResult);
@@ -2201,7 +2216,7 @@
               </td>
               <td style="font-size: 0.75rem; color: var(--text-muted);">${row.last_eval}</td>
               <td style="text-align: center;">
-                <button class="btn" onclick="deleteRecord('${row.subject_id}')" style="padding: 4px 8px; font-size: 0.75rem; color: var(--danger); border: 1.5px solid var(--danger); background: transparent; margin-top: 0; min-height: unset; height: unset;">
+                <button class="btn" onclick="deleteRecord('${row.session_id}', '${row.subject_id}')" style="padding: 4px 8px; font-size: 0.75rem; color: var(--danger); border: 1.5px solid var(--danger); background: transparent; margin-top: 0; min-height: unset; height: unset;">
                   <i class="bi bi-trash-fill"></i>
                 </button>
               </td>
@@ -2216,14 +2231,14 @@
         renderHistoryTable();
       }
 
-      function deleteRecord(subjectId) {
-        if (!confirm(`¿Está seguro de que desea eliminar permanentemente todos los registros del participante "${subjectId}"? Esta acción no se puede deshacer.`)) {
+      function deleteRecord(sessionId, subjectId) {
+        if (!confirm(`¿Está seguro de que desea eliminar permanentemente este registro del participante "${subjectId}"? Esta acción no se puede deshacer.`)) {
           return;
         }
         fetch("/api/delete_subject", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ subject_id: subjectId })
+          body: JSON.stringify({ session_id: sessionId, subject_id: subjectId })
         })
         .then((res) => res.json())
         .then((data) => {

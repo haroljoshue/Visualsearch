@@ -1,13 +1,13 @@
-# Guia de Presentacion: Test de Busqueda Visual
+# Presentacion: Test de Busqueda Visual
 
-Esta guia contiene la estructura detallada y el contenido teorico-practico del Test de Busqueda Visual. Explica el paradigma cognitivo, la temporalidad de los estimulos y el rol de las herramientas tecnologicas como instrumentos de evaluacion clinica y experimental.
+Esta guia contiene la estructura conceptual y el fundamento teorico-practico del Test de Busqueda Visual. Explica el paradigma cognitivo, la temporalidad de los estimulos y el rol de las herramientas tecnologicas como instrumentos de evaluacion clinica y experimental.
 
 ---
 
 ## 1. Fundamento Teorico y Paradigma Cognitivo
 
 ### El Paradigma de Busqueda Visual
-Basado en la **Teoria de la Integracion de Caracteristicas** (*Feature Integration Theory*) propuesta por **Anne Treisman y Garry Gelade en 1980**. Este paradigma es una herramienta fundamental en la psicologia cognitiva para estudiar la atencion selectiva y los mecanismos de procesamiento de la informacion visual.
+Basado en la **Teoria de la Integracion de Caracteristicas** (*Feature Integration Theory*) propuesta por **Anne Treisman y Garry Gelade en 1980**. Este paradigma es una herramienta fundamental en la psicologia para estudiar la atencion selectiva y los mecanismos de procesamiento de la informacion en el cerebro.
 
 ### Procesos Cognitivos Evaluados
 * **Atencion Selectiva y Focalizada:** Capacidad del sujeto para seleccionar un estimulo relevante (objetivo) y procesarlo activamente mientras inhibe de forma voluntaria los estimulos irrelevantes (distractores).
@@ -42,11 +42,11 @@ El test evalua y contrasta dos tipos de busqueda que utiliza el cerebro para res
 
 ---
 
-## 4. El Instrumento Tecnologico desde la Perspectiva Psicologica
+## 4. El Instrumento Tecnologico desde la Perspectiva Cientifica
 
-En lugar de ver el software como un desarrollo de ingenieria de sistemas, para la psicologia actua como un **instrumento de laboratorio digital**:
+En lugar de ver el software como un desarrollo aislado de ingenieria, este actua como un **instrumento de laboratorio digital**:
 
 * **El Entorno Experimental (HTML, CSS y Javascript):**
-  * Equivale a la clasica "caja de estimulacion". Se encarga de proyectar con precision sistematica los elementos visuales en la pantalla y capturar la latencia exacta (en milisegundos) entre la aparicion de la imagen y la respuesta motora en el teclado.
+  - Equivale a la clasica "caja de estimulacion". Se encarga de proyectar con precision sistematica los elementos visuales en la pantalla (HTML/CSS) y capturar la latencia exacta (Javascript) en milisegundos entre la aparicion de la imagen y la respuesta motora en el teclado.
 * **El Registro y Analisis de Datos (Python y Flask):**
-  * Funciona como la libreta de anotaciones automatizada del investigador. En lugar de registrar a mano cada respuesta, el software tabula el porcentaje de precision (aciertos y errores) y la velocidad de respuesta en una planilla digital (.csv). Esto permite al psicologo enfocarse unicamente en la interpretacion clinica del rendimiento cognitivo del evaluado.
+  - Funciona como el registro automatizado del investigador. En lugar de anotar a mano cada respuesta, el software (Python) recibe la informacion de forma invisible a traves del servidor local (Flask) y tabula el porcentaje de precision (aciertos y errores) y la velocidad de respuesta en una planilla digital (.csv). Esto permite al evaluador enfocarse unicamente en la interpretacion conceptual del rendimiento cognitivo del evaluado.

@@ -14,7 +14,7 @@ CSV_PATH = os.path.join(DATA_DIR, 'simple_results.csv')
 HISTORIC_CSV_PATH = os.path.join(DATA_DIR, 'all_history_results.csv')
 
 def init_csv():
-    headers = ['Attempt ID', 'Reaction Time (ms)', 'Set Size', 'Stimulus Type', 'Target Present', 'Response Given', 'Is Correct', 'Search Type', 'Subject ID', 'Age', 'Gender', 'Timestamp']
+    headers = ['Attempt ID', 'Reaction Time (ms)', 'Set Size', 'Stimulus Type', 'Target Present', 'Response Given', 'Is Correct', 'Search Type', 'Subject ID', 'Age', 'Gender', 'Timestamp', 'Session ID']
     for path in [CSV_PATH, HISTORIC_CSV_PATH]:
         needs_init = True
         if os.path.exists(path):
@@ -64,11 +64,12 @@ def save_trial():
         subject_id = data.get('subject_id', 'Anonimo')
         age = data.get('age', '')
         gender = data.get('gender', '')
+        session_id = data.get('session_id', 'SES-UNKNOWN')
         
         import datetime
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
-        row = [attempt_id, rt, set_size, stimulus_type, target_present, response_given, is_correct, search_type, subject_id, age, gender, timestamp]
+        row = [attempt_id, rt, set_size, stimulus_type, target_present, response_given, is_correct, search_type, subject_id, age, gender, timestamp, session_id]
         
         # Save to active session CSV
         with open(CSV_PATH, 'a', newline='', encoding='utf-8') as f:
@@ -409,11 +410,17 @@ def export_history_excel():
             # --- SHEET 1: Resumen de Participantes ---
             df_history['Is Correct Num'] = df_history['Is Correct'].apply(lambda x: 1 if str(x).lower() in ['true', '1', 'yes', 'correct'] else 0)
             
-            subject_groups = df_history.groupby(['Subject ID', 'Age', 'Gender'])
+            if 'Session ID' not in df_history.columns:
+                df_history['Session ID'] = 'SES-LEGACY'
+            df_history['Session ID'] = df_history['Session ID'].fillna(
+                df_history.groupby(['Subject ID', 'Age', 'Gender'])['Timestamp'].transform('min').fillna('SES-LEGACY')
+            )
+            
+            subject_groups = df_history.groupby(['Session ID', 'Subject ID', 'Age', 'Gender'])
             
             history_rows = []
             for name, group in subject_groups:
-                sub_id, age, gender = name
+                session_id, sub_id, age, gender = name
                 total_trials = len(group)
                 
                 correct_group = group[(group['Is Correct Num'] == 1) & (group['Reaction Time (ms)'] < 90000) & (group['Response Given'] != 'TIMEOUT')]
@@ -456,6 +463,7 @@ def export_history_excel():
                     diagnostico = "Busqueda Serial"
                 
                 history_rows.append({
+                    'ID de Sesión': session_id,
                     'ID de Participante': sub_id,
                     'Edad': age,
                     'Género': gender,
@@ -482,7 +490,7 @@ def export_history_excel():
                 for col_idx in range(len(hist_summary_df.columns)):
                     worksheet1.write(row_idx + 1, col_idx, hist_summary_df.iloc[row_idx, col_idx], cell_format)
                     
-            worksheet1.set_column('A:M', 22)
+            worksheet1.set_column('A:N', 22)
             worksheet1.set_row(0, 26)
             
             # --- SHEET 2: Detalle de Respuestas Históricas ---
@@ -499,7 +507,8 @@ def export_history_excel():
                 'Subject ID': 'ID de Participante',
                 'Age': 'Edad',
                 'Gender': 'Genero',
-                'Timestamp': 'Fecha/Hora'
+                'Timestamp': 'Fecha/Hora',
+                'Session ID': 'ID de Sesion'
             }, inplace=True)
             
             if 'Is Correct Num' in df_details.columns:
@@ -523,7 +532,7 @@ def export_history_excel():
                     else:
                         worksheet2.write(row_idx + 1, col_idx, val, cell_format)
                         
-            worksheet2.set_column('A:L', 20)
+            worksheet2.set_column('A:M', 20)
             worksheet2.set_row(0, 26)
             
         output.seek(0)
@@ -545,13 +554,19 @@ def get_history():
         if df_history.empty:
             return jsonify([])
         
+        if 'Session ID' not in df_history.columns:
+            df_history['Session ID'] = 'SES-LEGACY'
+        df_history['Session ID'] = df_history['Session ID'].fillna(
+            df_history.groupby(['Subject ID', 'Age', 'Gender'])['Timestamp'].transform('min').fillna('SES-LEGACY')
+        )
+        
         df_history['Is Correct Num'] = df_history['Is Correct'].apply(lambda x: 1 if str(x).lower() in ['true', '1', 'yes', 'correct'] else 0)
         
-        subject_groups = df_history.groupby(['Subject ID', 'Age', 'Gender'])
+        subject_groups = df_history.groupby(['Session ID', 'Subject ID', 'Age', 'Gender'])
         
         history_rows = []
         for name, group in subject_groups:
-            sub_id, age, gender = name
+            sess_id, sub_id, age, gender = name
             total_trials = len(group)
             
             correct_group = group[(group['Is Correct Num'] == 1) & (group['Reaction Time (ms)'] < 90000) & (group['Response Given'] != 'TIMEOUT')]
@@ -594,6 +609,7 @@ def get_history():
                 diagnostico = "Busqueda Serial"
                 
             history_rows.append({
+                'session_id': str(sess_id),
                 'subject_id': str(sub_id),
                 'age': int(age) if pd.notnull(age) else 0,
                 'gender': str(gender),
@@ -628,18 +644,32 @@ def clear_history_data():
 def delete_subject():
     try:
         data = request.get_json()
-        if not data or 'subject_id' not in data:
-            return jsonify({"status": "error", "message": "Falta el ID del participante"}), 400
+        if not data:
+            return jsonify({"status": "error", "message": "Falta el ID del participante o sesión"}), 400
         
-        subject_id = str(data.get('subject_id'))
+        session_id = data.get('session_id')
+        subject_id = data.get('subject_id')
+        
+        if not session_id and not subject_id:
+            return jsonify({"status": "error", "message": "Falta el ID del participante o sesión"}), 400
         
         if os.path.exists(HISTORIC_CSV_PATH):
             df_history = pd.read_csv(HISTORIC_CSV_PATH)
-            # Filter out rows matching Subject ID
-            df_history = df_history[df_history['Subject ID'].astype(str) != subject_id]
+            if 'Session ID' not in df_history.columns:
+                df_history['Session ID'] = 'SES-LEGACY'
+            
+            df_history['Session ID'] = df_history['Session ID'].fillna(
+                df_history.groupby(['Subject ID', 'Age', 'Gender'])['Timestamp'].transform('min').fillna('SES-LEGACY')
+            )
+            
+            if session_id:
+                df_history = df_history[df_history['Session ID'].astype(str) != str(session_id)]
+            elif subject_id:
+                df_history = df_history[df_history['Subject ID'].astype(str) != str(subject_id)]
+                
             df_history.to_csv(HISTORIC_CSV_PATH, index=False)
             
-        return jsonify({"status": "success", "message": f"Registro del participante {subject_id} eliminado"})
+        return jsonify({"status": "success", "message": "Registro eliminado"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

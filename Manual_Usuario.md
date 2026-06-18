@@ -1,80 +1,51 @@
-# Manual de Usuario y Guía de Resultados
+# Manual de Usuario y Guia de Resultados: Test de Busqueda Visual
 
-Esta guía técnica y metodológica describe el funcionamiento, la arquitectura general y la interpretación de los datos recopilados durante las evaluaciones del Test de Búsqueda Visual.
-
----
-
-## 1. Fundamento del Test
-
-Esta aplicación es un entorno de evaluación cognitiva basado en el clásico **Test de Búsqueda Visual** (Treisman & Gelade, 1980). Su propósito es medir la capacidad de atención selectiva, la velocidad de procesamiento de información y la eficiencia del participante al identificar estímulos objetivo frente a distractores de diversa complejidad bajo condiciones de movimiento dinámico.
+Esta guia describe de forma metodologica el funcionamiento de la aplicacion, la interpretacion de los datos recolectados y como se estructura la herramienta tanto a nivel psicologico como tecnologico.
 
 ---
 
-## 2. Arquitectura del Sistema
+## 1. Fundamento Psicologico del Test
 
-El sistema opera mediante la integración de dos componentes principales:
+El proposito de esta aplicacion es evaluar procesos cognitivos fundamentales:
 
-1. **Interfaz de Usuario (HTML, CSS, Javascript):** Es el entorno interactivo visible en el navegador. Se encarga de la generación espacial de los estímulos, del control temporal de los ensayos, de las animaciones físicas y de capturar los tiempos de reacción basándose en las entradas de teclado del participante (`S` para Presente, `N` para Ausente).
-2. **Servidor y Almacenamiento (Python, Flask, Pandas):** Es la capa lógica encargada de estructurar las métricas de respuesta enviadas desde la interfaz. Organiza la persistencia de los datos escribiendo en formato de base de datos plana (`.csv`), gestionando el historial de evaluaciones clínicas y procesando la exportación del informe a formatos de hoja de cálculo tradicionales (**Excel**).
-
----
-
-## 3. Protocolo del Ensayo
-
-Cada sesión consta de **30 ensayos** estructurados de forma secuencial:
-
-* **Cruz de Fijación (`+`):** Se muestra durante un intervalo fijo de 1.5 segundos (1500 ms) para pre-orientar la mirada del participante hacia el centro del campo de búsqueda.
-* **Presentación del Estímulo (Máximo 5 segundos):** Los elementos aparecen en movimiento vertical. El participante cuenta con un margen de 5.0 segundos para registrar su respuesta antes de que se considere ensayo nulo por tiempo límite.
-* **Retroalimentación de Desempeño:** Tras registrar la entrada, el sistema expone un aviso breve (Acierto, Error o Tiempo Agotado) antes del siguiente ensayo.
+* **Atencion Selectiva:** La capacidad para enfocar la mente en un estimulo especifico (objetivo) ignorando de forma activa otros elementos distractores.
+* **Velocidad de Procesamiento (Latencia):** El tiempo en milisegundos que le toma al cerebro percibir una escena, tomar una decision y realizar una respuesta motora.
+* **Carga Cognitiva:** Evaluacion de como la cantidad de distractores en pantalla afecta el tiempo de respuesta del evaluado.
 
 ---
 
-## 4. Análisis e Interpretación de Resultados
+## 2. Como Funciona el Test en la Aplicacion
 
-Al concluir los 30 ensayos, se procesan los datos acumulados para emitir un diagnóstico clínico cuantitativo:
+Cada sesion consta de un bloque de **30 ensayos**:
 
-### A. Métricas Clínicas Principales:
-* **Tiempo de Reacción (TR) Promedio:** Refleja la latencia media (en milisegundos) asociada a los ensayos resueltos correctamente. Menores tiempos expresan una mayor velocidad de procesamiento visual.
-* **Precisión (Tasa de Acierto):** Muestra el porcentaje de respuestas acertadas. Permite correlacionar la velocidad con el nivel de control y eficacia atencional del participante.
-
-### B. Clasificación de la Eficiencia Atencional:
-
-El diagnóstico contrasta el desempeño visual entre las siguientes dinámicas de búsqueda:
-
-1. **Búsqueda de Características (Procesamiento en Paralelo):**
-   * **Dinámica:** El objetivo difiere por un solo rasgo obvio respecto a los distractores (ej. una manzana roja entre manzanas verdes).
-   * **Efecto Cognitivo:** Produce un fenómeno de "Pop-out" (destaque automático). La velocidad de procesamiento suele ser alta y el tiempo de reacción permanece constante sin afectarse por la cantidad de distractores en pantalla.
-2. **Búsqueda de Conjunción (Procesamiento Serial):**
-   * **Dinámica:** El objetivo comparte características combinadas con los distractores (ej. un icono de red social con notificación roja entre otros iconos que varían en logo, número y posición).
-   * **Efecto Cognitivo:** Requiere un escaneo secuencial e intencional. El tiempo de reacción promedio aumenta de forma lineal conforme se incrementa la densidad de elementos en pantalla.
+1. **Cruz de Fijacion (+):** Aparece durante 1.5 segundos en el centro para orientar la mirada del participante hacia el area donde surgiran los estimulos.
+2. **Presentacion de Estimulos (Maximo 5 segundos):** Los elementos aparecen en movimiento vertical continuo. El participante debe identificar si el objetivo esta presente.
+3. **Entrada de Respuesta:**
+   - Si el objetivo **esta presente**, se presiona la tecla **S** (o el boton verde **SI [S]**).
+   - Si el objetivo **no esta presente**, se presiona la tecla **N** (o el boton rojo **NO [N]**).
+4. **Retroalimentacion Inmediata:** El sistema muestra si la respuesta fue un "Acierto", "Error" o si se agoto el tiempo ("Tiempo Agotado") antes de pasar al siguiente ensayo.
 
 ---
 
-## 5. Historial Clínico y Acceso Restringido
+## 3. Metricas y Analisis de Resultados
 
-Para salvaguardar la confidencialidad y la integridad de los registros:
+Al finalizar, la aplicacion procesa los datos y los presenta en un panel clinico de diagnostico con las siguientes variables:
 
-* **Clave de Acceso Evaluador:** Se requiere ingresar la contraseña autorizada **`170805`** en el panel de validación para desplegar el historial consolidado.
-* **Gráficos Estadísticos:** Se presentan análisis visuales automáticos que muestran el comportamiento del tiempo de reacción promedio frente al volumen de aciertos y la distribución demográfica de las evaluaciones guardadas.
-* **Mantenimiento del Historial:** Los evaluadores disponen de herramientas para depurar registros individuales mediante la opción de eliminación (`🗑️`), borrar el registro histórico completo o exportar la planilla completa a Excel.
-
----
-
-## 6. Acceso Móvil Automatizado (Código QR)
-
-Para facilitar la administración del test desde dispositivos móviles:
-* **Generación de QR Dinámico:** Al iniciar la aplicación en un servidor web local o público, la pantalla de inicio autogenera y despliega un **Código QR** correspondiente a su dirección URL actual.
-* **Uso:** El evaluador puede abrir la aplicación en su computadora y proyectar o mostrar la pantalla de inicio; los participantes solo necesitan escanear el código QR con la cámara de sus celulares para ser dirigidos inmediatamente al test móvil sin necesidad de ingresar la dirección web manualmente.
+* **TR Paralela (Tiempo de Reaccion en Busqueda Paralela):** Tiempo promedio en los ensayos donde el objetivo se distingue por una sola caracteristica (ej. color o forma diferente), generando un efecto de destaque automatico ("Pop-out"). El tiempo de respuesta es bajo y estable.
+* **TR Serial (Tiempo de Reaccion en Busqueda Serial):** Tiempo promedio cuando el objetivo comparte multiples rasgos con los distractores. Requiere un analisis secuencial y consciente, aumentando el tiempo linealmente segun el numero de elementos.
+* **Pendiente de Busqueda:** Medicion en milisegundos por elemento. Si es baja (menor o igual a 8 ms), refleja un procesamiento de filtrado automatico preatentivo. Si es alta, indica busqueda serial exhaustiva y mayor esfuerzo mental.
+* **Precision Global y Errores:** Porcentaje de aciertos frente al total de intentos y recuento de fallos.
+* **Diagnostico Clinico:** Clasificacion automatica entre procesamiento paralelo (eficiente) y serial (guiado/exhaustivo) segun el efecto de pendiente.
 
 ---
 
-## 7. Despliegue en Servidores Públicos (Alternativa Render)
+## 4. Arquitectura Tecnologica Simplificada
 
-Además de Railway, **Render** (render.com) es una alternativa gratuita y sumamente sencilla para hospedar la aplicación:
-1. Inicie sesión en **Render** usando su cuenta de GitHub.
-2. Cree un **"New Web Service"** y seleccione el repositorio del proyecto.
-3. Defina los siguientes parámetros:
-   * **Runtime:** `Python`
-   * **Build Command:** `pip install -r requirements.txt`
-   * **Start Command:** `gunicorn app:app`
-4. Render desplegará el proyecto y generará una URL pública y segura (https://...) que cargará de forma automática el código QR en la pantalla de inicio.
+La aplicacion combina dos tecnologias basicas para funcionar como un instrumento digital:
+
+* **El Frente de la Aplicacion (HTML y Javascript):**
+  - **HTML** define la estructura visual del test (botones, formularios y el lienzo canvas).
+  - **Javascript** ejecuta la logica en el navegador en tiempo real. Controla la fisica de los movimientos de los estimulos, mide la latencia exacta de las respuestas en milisegundos y proporciona la retroalimentacion visual instantanea.
+* **El Servidor Trasero (Python y Flask):**
+  - **Python** (con el modulo **Flask**) recibe las respuestas enviadas por la aplicacion a traves de la red y las escribe permanentemente en un archivo local plano (`.csv`).
+  - Tambien calcula las formulas estadisticas (medias, pendientes) y se encarga de empaquetar y exportar la informacion a archivos de **Excel** estructurados para que puedan ser analizados facilmente en otros programas.
