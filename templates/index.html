@@ -27,9 +27,9 @@
         --bg-secondary: #ffffff;
         --text-main: #0f172a;
         --text-muted: #64748b;
-        --primary: #1e40af; /* Psychology Royal Blue */
-        --primary-hover: #1d4ed8;
-        --primary-light: #eff6ff;
+        --primary: #c8102e; /* UTN Institutional Red */
+        --primary-hover: #a50d26;
+        --primary-light: #fef2f2;
         --danger: #b91c1c;
         --success: #10b981;
         --border-color: #cbd5e1;
@@ -679,8 +679,9 @@
         <div class="header-title">
           <img src="{{ url_for('static', filename='images/utn_logo.png') }}" alt="UTN Logo" class="header-logo">
           <div>
-            <h1>Universidad Técnica del Norte</h1>
-            <p class="subtitle">Evaluación de Búsqueda Visual</p>
+            <h1 style="margin: 0; line-height: 1.2;">Universidad Técnica del Norte</h1>
+            <p class="subtitle" style="margin: 2px 0 0 0; font-weight: 700; color: var(--primary);">FECYT • Carrera de Psicología</p>
+            <p class="subtitle" style="margin: 1px 0 0 0; font-size: 0.65rem;">Evaluación de Búsqueda Visual</p>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -2090,8 +2091,8 @@
                     {
                       label: 'T.R. Promedio (ms)',
                       data: rts.slice(0, 10),
-                      backgroundColor: 'rgba(30, 64, 175, 0.75)', // Psychology Royal Blue
-                      borderColor: 'rgb(30, 64, 175)',
+                      backgroundColor: 'rgba(200, 16, 46, 0.75)', // UTN Institutional Red
+                      borderColor: 'rgb(200, 16, 46)',
                       borderWidth: 1.5,
                       yAxisID: 'y-rt'
                     },
@@ -2147,7 +2148,7 @@
                   datasets: [{
                     data: [males, females, others],
                     backgroundColor: [
-                      'rgba(37, 99, 235, 0.75)', // Blue
+                      'rgba(200, 16, 46, 0.75)', // Red
                       'rgba(236, 72, 153, 0.75)', // Pink
                       'rgba(100, 116, 139, 0.75)'  // Slate/Other
                     ],
