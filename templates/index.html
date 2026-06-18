@@ -1649,9 +1649,9 @@
 
           if (blockSelectedStimulus === "social_intruder") {
             const wrapper = document.createElement("div");
-            wrapper.style.width = "38px";
-            wrapper.style.height = "38px";
-            wrapper.style.borderRadius = "10px";
+            wrapper.style.width = "44px";
+            wrapper.style.height = "44px";
+            wrapper.style.borderRadius = "12px";
             wrapper.style.position = "relative";
             wrapper.style.boxShadow = "0 4px 10px rgba(0,0,0,0.12)";
             wrapper.style.display = "flex";
@@ -1665,63 +1665,63 @@
             if (appType === 0) {
               // WhatsApp
               wrapper.style.background = "linear-gradient(135deg, #128c7e 0%, #25d366 100%)";
-              innerIcon = '<i class="bi bi-whatsapp" style="color:white; font-size:1.15rem;"></i>';
+              innerIcon = '<i class="bi bi-whatsapp" style="color:white; font-size:1.35rem;"></i>';
             } else if (appType === 1) {
               // Instagram
               wrapper.style.background = "linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%)";
-              innerIcon = '<i class="bi bi-instagram" style="color:white; font-size:1.15rem;"></i>';
+              innerIcon = '<i class="bi bi-instagram" style="color:white; font-size:1.35rem;"></i>';
             } else if (appType === 2) {
               // Facebook
               wrapper.style.background = "linear-gradient(135deg, #1877f2 0%, #3b5998 100%)";
-              innerIcon = '<i class="bi bi-facebook" style="color:white; font-size:1.15rem;"></i>';
+              innerIcon = '<i class="bi bi-facebook" style="color:white; font-size:1.35rem;"></i>';
             } else {
               // TikTok / General App
               wrapper.style.background = "linear-gradient(135deg, #010101 0%, #252525 100%)";
-              innerIcon = '<i class="bi bi-music-note" style="color:white; font-size:1.15rem;"></i>';
+              innerIcon = '<i class="bi bi-music-note" style="color:white; font-size:1.35rem;"></i>';
             }
             wrapper.innerHTML = innerIcon;
             
             // Notification badge
             const badge = document.createElement("div");
             badge.style.position = "absolute";
-            badge.style.width = "20px";
-            badge.style.height = "20px";
+            badge.style.width = "22px";
+            badge.style.height = "22px";
             badge.style.borderRadius = "50%";
             badge.style.display = "flex";
             badge.style.alignItems = "center";
             badge.style.justifyContent = "center";
-            badge.style.fontSize = "10px";
+            badge.style.fontSize = "11px";
             badge.style.fontWeight = "900";
             badge.style.color = "#ffffff";
             badge.style.boxShadow = "0 2px 4px rgba(0,0,0,0.2)";
             
             if (isTarget) {
-              // Estímulo Blanco: Globo rojo circular degradado, número fragmentado
-              badge.style.top = "-7px";
-              badge.style.right = "-7px";
-              badge.style.background = "radial-gradient(circle, rgba(239, 68, 68, 1) 0%, rgba(239, 68, 68, 0.45) 100%)";
-              badge.textContent = "8";
-              badge.className = "fragmented-number";
+              // Estímulo Blanco: Globo rojo circular degradado, número fragmentado (SVG vectorial discontinuo nítido)
+              badge.style.top = "-8px";
+              badge.style.right = "-8px";
+              badge.style.background = "radial-gradient(circle, rgba(239, 68, 68, 1) 0%, rgba(239, 68, 68, 0.3) 100%)";
+              badge.style.border = "1.5px solid rgba(255, 255, 255, 0.9)";
+              badge.innerHTML = `<svg viewBox="0 0 20 20" width="13" height="13" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="2.2 1.2" style="display: block; margin: auto;"><circle cx="10" cy="7" r="3.5" /><circle cx="10" cy="13" r="4" /></svg>`;
               badge.style.zIndex = "5";
             } else {
               // Distractores trampa
               const distType = Math.floor(Math.random() * 3);
               if (distType === 0) {
                 // Globo rojo con letra (B u O) en lugar de número
-                badge.style.top = "-7px";
-                badge.style.right = "-7px";
+                badge.style.top = "-8px";
+                badge.style.right = "-8px";
                 badge.style.backgroundColor = "#ef4444";
                 badge.textContent = Math.random() < 0.5 ? "B" : "O";
               } else if (distType === 1) {
                 // Globo naranja con números
-                badge.style.top = "-7px";
-                badge.style.right = "-7px";
+                badge.style.top = "-8px";
+                badge.style.right = "-8px";
                 badge.style.backgroundColor = "#f97316"; // Bright Orange
                 badge.textContent = "8";
               } else {
                 // Globo rojo con número, parcialmente oculto detrás del icono principal
-                badge.style.top = "8px";
-                badge.style.right = "-9px";
+                badge.style.top = "10px";
+                badge.style.right = "-10px";
                 badge.style.backgroundColor = "#ef4444";
                 badge.textContent = "8";
                 badge.style.zIndex = "1";
