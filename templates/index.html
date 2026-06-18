@@ -1089,13 +1089,11 @@
             >
               Resultados de Evaluación
             </h2>
-
-            <!-- Mensaje de despedida y agradecimiento -->
-            <div style="background-color: #f0fdf4; border: 1.5px solid #bbf7d0; color: #166534; padding: 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; text-align: center; margin-bottom: 16px; width: 100%;">
-              Evaluacion finalizada con exito. Muchas gracias por participar en este test.
-            </div>
-
             <div class="results-layout">
+              <!-- Mensaje de despedida y agradecimiento -->
+              <div style="background-color: #f0fdf4; border: 1.5px solid #bbf7d0; color: #166534; padding: 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; text-align: center; margin-bottom: 0; width: 100%;">
+                Evaluación finalizada con éxito. Muchas gracias por participar en este test.
+              </div>
               <!-- Top: Diagnosis -->
               <div class="results-diag-card">
                 <h3>
@@ -2014,12 +2012,12 @@
         let alertText = "";
 
         if (slope <= 8) {
-          searchTypeBadge.textContent = "Búsqueda Paralela (Pop-Out)";
+          searchTypeBadge.textContent = "Atención Eficiente (Paralela)";
           searchTypeBadge.style.backgroundColor = "var(--primary-light)";
           searchTypeBadge.style.color = "var(--primary)";
           efficiencyText = "Excelente (Procesamiento Automático)";
 
-          alertText = `El efecto de pendiente (<code>${slope.toFixed(1)} ms/elemento</code>) indica que el numero de distractores no afecto significativamente tu velocidad de procesamiento. Esto representa un procesamiento en paralelo automatico (Pop-Out) y un excelente control atencional involuntario.`;
+          alertText = `<strong>¡Atención Muy Eficiente!</strong> Tu cerebro detecta el objetivo casi al instante, sin importar cuántas distracciones haya a su alrededor. Esto demuestra una excelente agilidad visual, capacidad de enfoque automático y gran control de la atención primaria (Pendiente: <code>${slope.toFixed(1)} ms/elemento</code>).`;
 
           diagnosisText = `
                     <p style="margin-bottom: 10px; text-align: left; font-size: 0.8rem; line-height: 1.5;">• <strong>Precisión Global:</strong> <code>${accuracyPct}%</code> (${ensayosValidos.length} de ${trialsData.length} aciertos).</p>
@@ -2028,12 +2026,12 @@
                     <p style="text-align: left; font-size: 0.8rem; line-height: 1.5;">• <strong>Resumen Clínico:</strong> Tu capacidad de filtrado visual primario funciona con una latencia de respuesta óptima, lo que sugiere un excelente control atencional involuntario.</p>
                 `;
         } else {
-          searchTypeBadge.textContent = "Búsqueda Serial (Focalizada)";
+          searchTypeBadge.textContent = "Atención Secuencial (Serial)";
           searchTypeBadge.style.backgroundColor = "#fee2e2";
           searchTypeBadge.style.color = "var(--danger)";
           efficiencyText = slope <= 20 ? "Promedio (Búsqueda Guiada)" : "Baja (Exploración Exhaustiva)";
 
-          alertText = `El efecto de pendiente (<code>${slope.toFixed(1)} ms/elemento</code>) indica que tu cerebro necesito realizar una busqueda serial y secuencial para analizar cada estimulo. A mayor numero de distractores, mayor tiempo de respuesta y carga cognitiva.`;
+          alertText = `<strong>Atención Secuencial y Detallada.</strong> Tu cerebro necesita analizar los elementos uno por uno para encontrar el objetivo. A mayor cantidad de distractores, te tomará un poco más de tiempo y esfuerzo concentrarte, lo cual refleja una búsqueda atencional voluntaria, minuciosa y secuencial (Pendiente: <code>${slope.toFixed(1)} ms/elemento</code>).`;
 
           diagnosisText = `
                     <p style="margin-bottom: 10px; text-align: left; font-size: 0.8rem; line-height: 1.5;">• <strong>Precisión Global:</strong> <code>${accuracyPct}%</code> (${ensayosValidos.length} de ${trialsData.length} aciertos).</p>

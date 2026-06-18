@@ -317,10 +317,10 @@ def export_excel():
                     
                     if slope <= 8:
                         nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que el numero de distractores no afecto significativamente tu velocidad de procesamiento. Esto representa un procesamiento en paralelo automatico (Pop-Out) y un excelente control atencional involuntario."
-                        diagnostico = "Busqueda Paralela"
+                        diagnostico = "Atención Eficiente (Paralela)"
                     else:
                         nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que tu cerebro necesito realizar una busqueda serial y secuencial para analizar cada estimulo. A mayor numero de distractores, mayor tiempo de respuesta y carga cognitiva."
-                        diagnostico = "Busqueda Serial"
+                        diagnostico = "Atención Secuencial (Serial)"
                     
                     history_rows.append({
                         'ID de Participante': sub_id,
@@ -457,10 +457,10 @@ def export_history_excel():
                 
                 if slope <= 8:
                     nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que el numero de distractores no afecto significativamente tu velocidad de procesamiento. Esto representa un procesamiento en paralelo automatico (Pop-Out) y un excelente control atencional involuntario."
-                    diagnostico = "Busqueda Paralela"
+                    diagnostico = "Atención Eficiente (Paralela)"
                 else:
                     nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que tu cerebro necesito realizar una busqueda serial y secuencial para analizar cada estimulo. A mayor numero de distractores, mayor tiempo de respuesta y carga cognitiva."
-                    diagnostico = "Busqueda Serial"
+                    diagnostico = "Atención Secuencial (Serial)"
                 
                 history_rows.append({
                     'ID de Sesión': session_id,
@@ -603,10 +603,10 @@ def get_history():
             
             if slope <= 8:
                 nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que el numero de distractores no afecto significativamente tu velocidad de procesamiento. Esto representa un procesamiento en paralelo automatico (Pop-Out) y un excelente control atencional involuntario."
-                diagnostico = "Busqueda Paralela"
+                diagnostico = "Atención Eficiente (Paralela)"
             else:
                 nota_clinica = f"El efecto de pendiente ({round(slope, 1)} ms/elemento) indica que tu cerebro necesito realizar una busqueda serial y secuencial para analizar cada estimulo. A mayor numero de distractores, mayor tiempo de respuesta y carga cognitiva."
-                diagnostico = "Busqueda Serial"
+                diagnostico = "Atención Secuencial (Serial)"
                 
             history_rows.append({
                 'session_id': str(sess_id),
