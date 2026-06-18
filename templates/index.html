@@ -140,14 +140,10 @@
         gap: 12px;
       }
 
-      .header-badge {
-        background: linear-gradient(135deg, var(--primary) 0%, #157347 100%);
-        color: white;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-weight: 800;
-        font-size: 0.9rem;
-        letter-spacing: -0.02em;
+      .header-logo {
+        height: 42px;
+        width: auto;
+        object-fit: contain;
       }
 
       .header-title h1 {
@@ -461,6 +457,9 @@
         .top-bar {
           padding: 8px 16px !important;
         }
+        .header-logo {
+          height: 32px !important;
+        }
         .top-bar h1 {
           font-size: 0.95rem !important;
         }
@@ -567,6 +566,9 @@
           flex-direction: row !important;
           justify-content: space-between !important;
           align-items: center !important;
+        }
+        .header-logo {
+          height: 32px !important;
         }
         .top-bar h1 {
           font-size: 0.82rem !important;
@@ -675,7 +677,7 @@
     <div class="app-container">      <!-- Top Bar Header -->
       <header class="top-bar">
         <div class="header-title">
-          <div class="header-badge">UTN</div>
+          <img src="{{ url_for('static', filename='images/utn_logo.png') }}" alt="UTN Logo" class="header-logo">
           <div>
             <h1>Universidad Técnica del Norte</h1>
             <p class="subtitle">Evaluación de Búsqueda Visual</p>
@@ -2219,14 +2221,29 @@
               </td>
               <td style="font-size: 0.75rem; color: var(--text-muted);">${row.last_eval}</td>
               <td style="text-align: center; vertical-align: middle;">
-                <button class="btn" onclick="deleteRecord('${row.session_id}', '${row.subject_id}')" style="padding: 10px 14px; font-size: 0.95rem; color: var(--danger); border: 1.5px solid var(--danger); background: transparent; margin-top: 0; min-height: 40px; min-width: 40px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; touch-action: manipulation;">
-                  <i class="bi bi-trash-fill"></i>
+                <button class="btn btn-delete-record" data-session-id="${row.session_id}" data-subject-id="${row.subject_id.replace(/"/g, '&quot;')}" style="padding: 10px 14px; font-size: 0.95rem; color: var(--danger); border: 1.5px solid var(--danger); background: transparent; margin-top: 0; min-height: 40px; min-width: 40px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; touch-action: manipulation;">
+                  <i class="bi bi-trash-fill" style="pointer-events: none;"></i>
                 </button>
               </td>
             </tr>
           `;
           histTableBody.innerHTML += tr;
         });
+
+        // Register event delegation for history record deletion if not already registered
+        if (!histTableBody.dataset.listenerAttached) {
+          histTableBody.addEventListener("click", (e) => {
+            const btn = e.target.closest(".btn-delete-record");
+            if (btn) {
+              const sessionId = btn.getAttribute("data-session-id");
+              const subjectId = btn.getAttribute("data-subject-id");
+              if (sessionId && subjectId) {
+                deleteRecord(sessionId, subjectId);
+              }
+            }
+          });
+          histTableBody.dataset.listenerAttached = "true";
+        }
       }
 
       function changeHistoryPage(direction) {
