@@ -1021,10 +1021,7 @@
           <div
             id="fixation-countdown"
             style="
-              margin-top: 20px;
-              font-size: 1.1rem;
-              font-weight: 700;
-              color: var(--text-muted);
+              display: none;
             "
           >
             Siguiente ensayo en --s
@@ -1448,75 +1445,75 @@
 
       const stimulusInstructions = {
         letters: `
-          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-bullseye"></i> Estímulo a Buscar:</h4>
-          <p style="margin-bottom:15px; font-size: 0.95rem;">Busca la letra <strong>"Q"</strong> en mayúscula (azul).</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Distractores:</h4>
-          <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá letras <strong>"O"</strong> en azul, y a veces letras <strong>"Q"</strong> de color rojo.</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
+          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-bullseye"></i> ¿Qué debes buscar?</h4>
+          <p style="margin-bottom:15px; font-size: 0.95rem;">Tu objetivo es encontrar la letra <strong>"Q" de color azul</strong> en la pantalla.</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Distractores (lo que te puede confundir):</h4>
+          <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá también letras <strong>"O" azules</strong> y a veces letras <strong>"Q" de color rojo</strong>. ¡Esas no cuentan!</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Cómo debes responder?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si encuentras la <strong>"Q" azul</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
-            <li>Si NO está la "Q" azul, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
+            <li>Si logras ver la <strong>"Q" azul</strong>, presiona la tecla <kbd>S</kbd> de tu teclado (o toca el botón verde <strong>SÍ [S]</strong>).</li>
+            <li>Si NO está la "Q" azul en la pantalla, presiona la tecla <kbd>N</kbd> (o toca el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `,
         colors: `
-          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-bullseye"></i> Estímulo a Buscar:</h4>
-          <p style="margin-bottom:15px; font-size: 0.95rem;">Busca el <strong>Círculo Azul</strong> 🔵.</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Distractores:</h4>
-          <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá círculos rojos 🔴 y a veces cuadrados azules 🟦 en pantalla.</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
+          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-bullseye"></i> ¿Qué debes buscar?</h4>
+          <p style="margin-bottom:15px; font-size: 0.95rem;">Tu objetivo es encontrar el <strong>Círculo Azul</strong> 🔵.</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Distractores (lo que te puede confundir):</h4>
+          <p style="margin-bottom:15px; font-size: 0.95rem;">En la pantalla aparecerán también círculos rojos 🔴 y cuadrados azules 🟦. No les prestes atención.</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Cómo debes responder?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si encuentras el <strong>Círculo Azul</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
-            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
+            <li>Si logras ver el <strong>Círculo Azul</strong>, presiona la tecla <kbd>S</kbd> (o toca el botón verde <strong>SÍ [S]</strong>).</li>
+            <li>Si NO aparece, presiona la tecla <kbd>N</kbd> (o toca el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `,
         shapes: `
-          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-bullseye"></i> Estímulo a Buscar:</h4>
-          <p style="margin-bottom:15px; font-size: 0.95rem;">Busca el <strong>Cuadrado Verde</strong> 🟩.</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Distractores:</h4>
-          <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá círculos verdes 🟢 y a veces cuadrados naranjas 🟧 en pantalla.</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
+          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-bullseye"></i> ¿Qué debes buscar?</h4>
+          <p style="margin-bottom:15px; font-size: 0.95rem;">Tu objetivo es encontrar el <strong>Cuadrado Verde</strong> 🟩.</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Distractores (lo que te puede confundir):</h4>
+          <p style="margin-bottom:15px; font-size: 0.95rem;">En la pantalla verás también círculos verdes 🟢 y cuadrados naranjas 🟧. No les prestes atención.</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Cómo debes responder?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si encuentras el <strong>Cuadrado Verde</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
-            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
+            <li>Si logras ver el <strong>Cuadrado Verde</strong>, presiona la tecla <kbd>S</kbd> (o toca el botón verde <strong>SÍ [S]</strong>).</li>
+            <li>Si NO aparece, presiona la tecla <kbd>N</kbd> (o toca el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `,
         animals: `
-          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-bullseye"></i> Estímulo a Buscar:</h4>
-          <p style="margin-bottom:15px; font-size: 0.95rem;">Busca el <strong>Gato</strong> 🐱.</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Distractores:</h4>
-          <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá perros 🐶 y a veces otros felinos como tigres 🐯.</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
+          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-bullseye"></i> ¿Qué debes buscar?</h4>
+          <p style="margin-bottom:15px; font-size: 0.95rem;">Tu objetivo es encontrar al <strong>Gato</strong> 🐱.</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Distractores (lo que te puede confundir):</h4>
+          <p style="margin-bottom:15px; font-size: 0.95rem;">Aparecerán perritos 🐶 y a veces otros felinos parecidos como tigres 🐯. ¡Solo concéntrate en el gato doméstico!</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Cómo debes responder?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si encuentras el <strong>Gato 🐱</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
-            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
+            <li>Si logras ver al <strong>Gato 🐱</strong>, presiona la tecla <kbd>S</kbd> (o toca el botón verde <strong>SÍ [S]</strong>).</li>
+            <li>Si NO aparece, presiona la tecla <kbd>N</kbd> (o toca el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `,
         fruits: `
-          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-bullseye"></i> Estímulo a Buscar:</h4>
-          <p style="margin-bottom:15px; font-size: 0.95rem;">Busca la <strong>Manzana Roja</strong> 🍎.</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Distractores:</h4>
-          <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá <strong>Manzanas Verdes</strong> 🍏 y <strong>Cerezas</strong> 🍒 en pantalla.</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
+          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-bullseye"></i> ¿Qué debes buscar?</h4>
+          <p style="margin-bottom:15px; font-size: 0.95rem;">Tu objetivo es encontrar la <strong>Manzana Roja</strong> 🍎.</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Distractores (lo que te puede confundir):</h4>
+          <p style="margin-bottom:15px; font-size: 0.95rem;">Habrá también manzanas verdes 🍏 y cerezas rojas 🍒. ¡Concéntrate solo en la manzana roja!</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Cómo debes responder?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si encuentras la <strong>Manzana Roja 🍎</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
-            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
+            <li>Si logras ver la <strong>Manzana Roja 🍎</strong>, presiona la tecla <kbd>S</kbd> (o toca el botón verde <strong>SÍ [S]</strong>).</li>
+            <li>Si NO aparece, presiona la tecla <kbd>N</kbd> (o toca el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `,
         social_intruder: `
-          <h4 style="font-weight:800; color:var(--danger); margin-bottom:8px;"><i class="bi bi-exclamation-octagon-fill"></i> El Intruso en la Red Social (Nivel Extremo)</h4>
-          <p style="margin-bottom:12px; font-size: 0.95rem;"><strong>Estímulo Blanco (Objetivo):</strong> Un globo de notificación circular rojo con un número 8 blanco en el centro, que tiene un <em>degradado de opacidad</em> (casi transparente en los bordes) y el número blanco dibujado con <em>líneas discontinuas</em>.</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Distractores de Trampa:</h4>
+          <h4 style="font-weight:800; color:var(--danger); margin-bottom:8px;"><i class="bi bi-exclamation-octagon-fill"></i> El Globo Intruso (Nivel Especial)</h4>
+          <p style="margin-bottom:12px; font-size: 0.95rem;"><strong>¿Qué debes buscar?</strong> Tu objetivo es encontrar un globo de notificación rojo con el número <strong>8</strong> en blanco. Pero ten mucho cuidado: este globo especial es semitransparente (se desvanece en los bordes) y el número 8 está dibujado con una línea de rayitas o guiones.</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-slash-circle"></i> Los globos tramposos:</h4>
           <ul style="padding-left:20px; margin-bottom:12px; font-size: 0.9rem; line-height: 1.5;">
-            <li>Globos rojos comunes con letras (<kbd>B</kbd> u <kbd>O</kbd>) en vez de números.</li>
-            <li>Globos naranjas comunes con números.</li>
-            <li>Globos rojos con números parcialmente ocultos detrás del icono de la app (gradiente morado/azul).</li>
+            <li>Globos rojos normales con letras (como <kbd>B</kbd> u <kbd>O</kbd>) en lugar de números.</li>
+            <li>Globos de color naranja con números.</li>
+            <li>Globos rojos comunes que están tapados por el icono de la aplicación.</li>
           </ul>
-          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-clock"></i> Dinámica Perceptiva:</h4>
-          <p style="margin-bottom:12px; font-size: 0.95rem;">Los iconos aparecerán deslizándose desde abajo y <strong>se ocultarán por completo tras 1.8 segundos</strong>. Debes responder rápidamente (¡incluso si ya desaparecieron!).</p>
-          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Qué debes presionar o pulsar?</h4>
+          <h4 style="font-weight:800; color:var(--primary); margin-bottom:8px;"><i class="bi bi-clock"></i> ¡Atención con el tiempo!</h4>
+          <p style="margin-bottom:12px; font-size: 0.95rem;">Los iconos se deslizarán hacia arriba en la pantalla y <strong>desaparecerán por completo después de casi 2 segundos</strong>. Intenta responder lo más rápido posible, ¡incluso si ya no los ves en pantalla!</p>
+          <h4 style="font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="bi bi-keyboard"></i> ¿Cómo debes responder?</h4>
           <ul style="padding-left:20px; margin-bottom:0; font-size: 0.9rem; line-height: 1.6;">
-            <li>Si identificas al <strong>globo intruso (degradado, número discontinuo)</strong>, presiona la tecla <kbd>S</kbd> (o pulsa el botón verde <strong>SI [S]</strong>).</li>
-            <li>Si NO está, presiona la tecla <kbd>N</kbd> (o pulsa el botón rojo <strong>NO [N]</strong>).</li>
+            <li>Si logras identificar al <strong>globo intruso (transparente y con el número 8 en rayitas)</strong>, presiona la tecla <kbd>S</kbd> (o toca el botón verde <strong>SÍ [S]</strong>).</li>
+            <li>Si NO está en la pantalla, presiona la tecla <kbd>N</kbd> (o toca el botón rojo <strong>NO [N]</strong>).</li>
           </ul>
         `
       };
